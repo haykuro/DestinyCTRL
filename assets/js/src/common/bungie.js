@@ -46,7 +46,7 @@ define(['common/utils', 'common/api', 'models/account'], function(Util, API, Acc
 
             resolve();
           }).catch(reject);
-        })
+        }).catch(reject);
     });
   };
 
