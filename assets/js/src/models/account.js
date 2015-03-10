@@ -1,12 +1,14 @@
-define(['models/character', 'common/api'], function(Character, API) {
+define(['common/api', 'models/character', 'models/vault'], function(API, Character, Vault) {
   function Account(data) {
+    var _self = this;
+
     this.id = data.userInfo.membershipId;
     this.type = data.userInfo.membershipType;
     this.lastPlayed = data.lastPlayed;
     this.grimoire = data.grimoireScore;
     this.avatar = 'https://www.bungie.net/' + data.userInfo.iconPath.replace(/^\//, '');
     this.characters = data.characters.map(function(char) {
-      return new Character(char);
+      return new Character(_self, char);
     });
   }
 
@@ -18,6 +20,10 @@ define(['models/character', 'common/api'], function(Character, API) {
     return this.type === 2;
   };
 
+  Account.prototype.getCharacters = function() {
+    return this.characters;
+  };
+
   Account.prototype.getVault = function() {
     var _self = this;
 
@@ -27,7 +33,11 @@ define(['models/character', 'common/api'], function(Character, API) {
         '/Destiny/' + _self.type +
         '/MyAccount/Vault',
         { definitions : true }
-      ).then(resolve).catch(reject);
+      ).then(function(resp) {
+        var vault = new Vault(resp.definitions, resp.data);
+
+        resolve(vault);
+      }).catch(reject);
     });
   }
 

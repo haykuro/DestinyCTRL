@@ -8,7 +8,10 @@
     'common/bungie',
     'common/utils',
     'models/account',
-    'models/character'
+    'models/character',
+    'models/vault',
+    'models/bucket',
+    'models/item'
   ],
   out : 'assets/js/dist/main.js',
   wrap : true,
