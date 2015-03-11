@@ -49,7 +49,7 @@ define(['common/bungie'], function(Bungie) {
 
             $weapon.append($icon);
 
-            $primaryWeapons.append($weapon);
+            $specialWeapons.append($weapon);
           });
 
           weapons.heavy.forEach(function(weapon) {
@@ -59,7 +59,7 @@ define(['common/bungie'], function(Bungie) {
 
             $weapon.append($icon);
 
-            $primaryWeapons.append($weapon);
+            $heavyWeapons.append($weapon);
           });
 
           $weaponsList.append($primaryWeapons);
