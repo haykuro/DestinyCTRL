@@ -5,13 +5,7 @@ define(['common/bungie'], function(Bungie) {
     var _self = this;
 
     Bungie.authorize().then(function() {
-      var accounts = Bungie.getAccounts();
-
-      if(accounts.length) {
-        accounts[0].getVault().then(function(vault) {
-          console.log(vault);
-        });
-      }
+      // Do something awesome.... or not... whatever
     }).catch(function(err) {
       alert(err.Message);
     });
