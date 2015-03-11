@@ -33,10 +33,12 @@ define(function() {
       this._fillPrimaryStat(meta.primaryBaseStat);
     }
 
-    this._fillTalentGrid(
-      repo.nodes,
-      definitions.talentGrids[meta.talentGridHash]
-    );
+    if(repo.nodes) {
+      this._fillTalentGrid(
+        repo.nodes,
+        definitions.talentGrids[meta.talentGridHash]
+      );
+    }
 
     delete this._definitions;
   }
