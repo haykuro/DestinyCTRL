@@ -15,7 +15,7 @@ define(['common/api', 'models/equipment'], function(API, Equipment) {
   Character.prototype.sync = function() {
     var _self = this;
 
-    API.request(
+    API.requestWithToken(
       'GET',
       '/Destiny/' + _self._account.type +
       '/Account/' + _self._account.id +
