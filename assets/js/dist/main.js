@@ -603,6 +603,7 @@ define('models/item',['models/bucket'], function(Bucket) {
     this.primaryStatId = null;
     this.talentGrid = [];
     this.tier = { type : meta.tierType, name : meta.tierName };
+
     this._definitions = definitions;
 
     this._fillBaseStats(repo.stats);
@@ -611,6 +612,8 @@ define('models/item',['models/bucket'], function(Bucket) {
       repo.nodes,
       definitions.talentGrids[meta.talentGridHash]
     );
+
+    delete this._definitions;
   }
 
   Item.prototype._fillBaseStats = function(stats) {
@@ -800,8 +803,8 @@ define('common/bungie',['common/utils', 'common/api', 'models/account'], functio
 
           API.requestWithToken(
             'GET',
-            '/User/GetBungieAccount/' + user.user.membershipId +
-            '/0'
+            '/User/GetBungieAccount/' +
+            user.user.membershipId + '/0'
           ).then(function(user) {
             _self._authed = true;
 
@@ -817,10 +820,6 @@ define('common/bungie',['common/utils', 'common/api', 'models/account'], functio
   };
 
   Bungie.prototype.getAccounts = function() {
-    if(! this._authed) {
-      throw new Error('Not authenticated.');
-    }
-
     return this._accounts;
   };
 
@@ -833,12 +832,16 @@ define('DestinyCTRL',['common/bungie'], function(Bungie) {
   DestinyCTRL.initialize = function() {
     var _self = this;
 
-    Bungie.authorize().catch(function() {
-      alert('You\'re not logged in.');
-    }).then(function() {
+    Bungie.authorize().then(function() {
       var accounts = Bungie.getAccounts();
 
-      accounts[0].getVault();
+      if(accounts.length) {
+        accounts[0].getVault().then(function(vault) {
+          console.log(vault);
+        });
+      }
+    }).catch(function(err) {
+      alert(err.Message);
     });
   };
 

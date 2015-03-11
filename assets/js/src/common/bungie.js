@@ -34,8 +34,8 @@ define(['common/utils', 'common/api', 'models/account'], function(Util, API, Acc
 
           API.requestWithToken(
             'GET',
-            '/User/GetBungieAccount/' + user.user.membershipId +
-            '/0'
+            '/User/GetBungieAccount/' +
+            user.user.membershipId + '/0'
           ).then(function(user) {
             _self._authed = true;
 
@@ -51,10 +51,6 @@ define(['common/utils', 'common/api', 'models/account'], function(Util, API, Acc
   };
 
   Bungie.prototype.getAccounts = function() {
-    if(! this._authed) {
-      throw new Error('Not authenticated.');
-    }
-
     return this._accounts;
   };
 

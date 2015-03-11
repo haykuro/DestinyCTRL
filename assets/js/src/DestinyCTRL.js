@@ -4,14 +4,16 @@ define(['common/bungie'], function(Bungie) {
   DestinyCTRL.initialize = function() {
     var _self = this;
 
-    Bungie.authorize().catch(function() {
-      alert('You\'re not logged in.');
-    }).then(function() {
+    Bungie.authorize().then(function() {
       var accounts = Bungie.getAccounts();
 
-      accounts[0].getVault().then(function(data) {
-        //
-      });
+      if(accounts.length) {
+        accounts[0].getVault().then(function(vault) {
+          console.log(vault);
+        });
+      }
+    }).catch(function(err) {
+      alert(err.Message);
     });
   };
 

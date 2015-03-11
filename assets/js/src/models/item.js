@@ -21,6 +21,7 @@ define(['models/bucket'], function(Bucket) {
     this.primaryStatId = null;
     this.talentGrid = [];
     this.tier = { type : meta.tierType, name : meta.tierName };
+
     this._definitions = definitions;
 
     this._fillBaseStats(repo.stats);
@@ -29,6 +30,8 @@ define(['models/bucket'], function(Bucket) {
       repo.nodes,
       definitions.talentGrids[meta.talentGridHash]
     );
+
+    delete this._definitions;
   }
 
   Item.prototype._fillBaseStats = function(stats) {
