@@ -8,24 +8,69 @@ define(['common/bungie'], function(Bungie) {
       var accounts = Bungie.getAccounts();
 
       if(accounts.length) {
+        var $vault = $('#vault');
+
         accounts[0].getVault().then(function(vault) {
-          var $vault = $('#vault');
+          var weaponBucket = vault.getWeapons();
+          var weapons = {
+            primary : weaponBucket.items.filter(function(item) {
+              return item.isPrimaryWeapon();
+            }),
+            special : weaponBucket.items.filter(function(item) {
+              return item.isSpecialWeapon();
+            }),
+            heavy : weaponBucket.items.filter(function(item) {
+              return item.isHeavyWeapon();
+            })
+          };
 
-          vault.getAll().forEach(function(bucket) {
-            var $bucket = $('<ul id="' + bucket.type + '" />');
+          var $weaponsCont = $('<div />');
+          var $weaponsTitle = $('<h1 />').text(weaponBucket.name);
+          var $weaponsDesc = $('<p />').text(weaponBucket.description);
+          var $weaponsList = $('<ul />');
+          var $primaryWeapons = $('<li class="clear"><strong>Primary</strong><br /></li>');
+          var $specialWeapons = $('<li class="clear"><strong>Special</strong><br /></li>');
+          var $heavyWeapons = $('<li class="clear"><strong>Heavy</strong><br /></li>');
 
-            bucket.getItems().forEach(function(item) {
-              var $item = $('<li />');
-              var $icon = $('<img />').attr('src', item.icon);
+          weapons.primary.forEach(function(weapon) {
+            var $weapon = $('<li />');
+            var $icon = $('<img />')
+              .attr('src', weapon.icon);
 
-              // console.log(item);
+            $weapon.append($icon);
 
-              $item.append($icon);
-              $bucket.append($item);
-            });
-
-            $vault.append($bucket);
+            $primaryWeapons.append($weapon);
           });
+
+          weapons.special.forEach(function(weapon) {
+            var $weapon = $('<li />');
+            var $icon = $('<img />')
+              .attr('src', weapon.icon);
+
+            $weapon.append($icon);
+
+            $primaryWeapons.append($weapon);
+          });
+
+          weapons.heavy.forEach(function(weapon) {
+            var $weapon = $('<li />');
+            var $icon = $('<img />')
+              .attr('src', weapon.icon);
+
+            $weapon.append($icon);
+
+            $primaryWeapons.append($weapon);
+          });
+
+          $weaponsList.append($primaryWeapons);
+          $weaponsList.append($specialWeapons);
+          $weaponsList.append($heavyWeapons);
+
+          $weaponsCont.append($weaponsTitle);
+          $weaponsCont.append($weaponsDesc);
+          $weaponsCont.append($weaponsList);
+
+          $vault.append($weaponsCont);
         });
       }
     }).catch(function(err) {
