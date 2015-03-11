@@ -1,3 +1,883 @@
-!function(){var t,e,n;!function(r){function i(t,e){return b.call(t,e)}function o(t,e){var n,r,i,o,s,c,u,a,f,h,p,l=e&&e.split("/"),m=w.map,d=m&&m["*"]||{};if(t&&"."===t.charAt(0))if(e){for(t=t.split("/"),s=t.length-1,w.nodeIdCompat&&E.test(t[s])&&(t[s]=t[s].replace(E,"")),t=l.slice(0,l.length-1).concat(t),f=0;f<t.length;f+=1)if(p=t[f],"."===p)t.splice(f,1),f-=1;else if(".."===p){if(1===f&&(".."===t[2]||".."===t[0]))break;f>0&&(t.splice(f-1,2),f-=2)}t=t.join("/")}else 0===t.indexOf("./")&&(t=t.substring(2));if((l||d)&&m){for(n=t.split("/"),f=n.length;f>0;f-=1){if(r=n.slice(0,f).join("/"),l)for(h=l.length;h>0;h-=1)if(i=m[l.slice(0,h).join("/")],i&&(i=i[r])){o=i,c=f;break}if(o)break;!u&&d&&d[r]&&(u=d[r],a=f)}!o&&u&&(o=u,c=a),o&&(n.splice(0,c,o),t=n.join("/"))}return t}function s(t,e){return function(){var n=k.call(arguments,0);return"string"!=typeof n[0]&&1===n.length&&n.push(null),l.apply(r,n.concat([t,e]))}}function c(t){return function(e){return o(e,t)}}function u(t){return function(e){y[t]=e}}function a(t){if(i(g,t)){var e=g[t];delete g[t],v[t]=!0,p.apply(r,e)}if(!i(y,t)&&!i(v,t))throw new Error("No "+t);return y[t]}function f(t){var e,n=t?t.indexOf("!"):-1;return n>-1&&(e=t.substring(0,n),t=t.substring(n+1,t.length)),[e,t]}function h(t){return function(){return w&&w.config&&w.config[t]||{}}}var p,l,m,d,y={},g={},w={},v={},b=Object.prototype.hasOwnProperty,k=[].slice,E=/\.js$/;m=function(t,e){var n,r=f(t),i=r[0];return t=r[1],i&&(i=o(i,e),n=a(i)),i?t=n&&n.normalize?n.normalize(t,c(e)):o(t,e):(t=o(t,e),r=f(t),i=r[0],t=r[1],i&&(n=a(i))),{f:i?i+"!"+t:t,n:t,pr:i,p:n}},d={require:function(t){return s(t)},exports:function(t){var e=y[t];return"undefined"!=typeof e?e:y[t]={}},module:function(t){return{id:t,uri:"",exports:y[t],config:h(t)}}},p=function(t,e,n,o){var c,f,h,p,l,w,b=[],k=typeof n;if(o=o||t,"undefined"===k||"function"===k){for(e=!e.length&&n.length?["require","exports","module"]:e,l=0;l<e.length;l+=1)if(p=m(e[l],o),f=p.f,"require"===f)b[l]=d.require(t);else if("exports"===f)b[l]=d.exports(t),w=!0;else if("module"===f)c=b[l]=d.module(t);else if(i(y,f)||i(g,f)||i(v,f))b[l]=a(f);else{if(!p.p)throw new Error(t+" missing "+f);p.p.load(p.n,s(o,!0),u(f),{}),b[l]=y[f]}h=n?n.apply(y[t],b):void 0,t&&(c&&c.exports!==r&&c.exports!==y[t]?y[t]=c.exports:h===r&&w||(y[t]=h))}else t&&(y[t]=n)},t=e=l=function(t,e,n,i,o){if("string"==typeof t)return d[t]?d[t](e):a(m(t,e).f);if(!t.splice){if(w=t,w.deps&&l(w.deps,w.callback),!e)return;e.splice?(t=e,e=n,n=null):t=r}return e=e||function(){},"function"==typeof n&&(n=i,i=o),i?p(r,t,e,n):setTimeout(function(){p(r,t,e,n)},4),l},l.config=function(t){return l(t)},t._defined=y,n=function(t,e,n){if("string"!=typeof t)throw new Error("See almond README: incorrect module build, no module name");e.splice||(n=e,e=[]),i(y,t)||i(g,t)||(g[t]=[t,e,n])},n.amd={jQuery:!0}}(),n("vendor/almond",function(){}),n("common/utils",[],function(){function t(){}return t.getCookie=function(t){return new Promise(function(e,n){window.hasOwnProperty("chrome")&&chrome.hasOwnProperty("cookies")?chrome.cookies.get({name:t,url:"https://www.bungie.net"},function(t){t?e(t.value):n()}.bind(this)):n()}.bind(this))},t.logError=function(t){if(t instanceof Error)throw t;console.error("Error["+t.ErrorCode+'] -> "'+t.Message+'"')},t}),n("common/api",["common/utils"],function(t){function e(){}return e.key=null,e.base="https://www.bungie.net/Platform",e.requestWithToken=function(){var n=this,r=[].slice.call(arguments);return new Promise(function(i,o){t.getCookie("bungled").then(function(t){var s=function(){delete n._csrf};n._csrf=t,e.request.apply(n,r).then(i)["catch"](o).then(s)})})},e.request=function(t,n,r,i){var o=this;return new Promise(function(s,c){var u=new XMLHttpRequest;u.onload=function(){var t=this.response,e=JSON.parse(t);this.status>=200&&this.status<400?e.ErrorCode>1?c(e):s(e.Response):c(e)},u.onerror=function(){var t=this.response,e=JSON.parse(t);c(e)};var a=[e.base.replace(/(\/$)/,""),n.replace(/(^\/|\/$)/,"")].join("/")+"/"+e.objectToQueryString(r||{});u.open(t,a,!0),o._csrf&&(u.withCredentials=!0,u.setRequestHeader("X-CSRF",o._csrf)),u.setRequestHeader("X-API-Key",e.key),u.send(i)})},e.objectToQueryString=function(t){var e=[];for(var n in t)e.push(encodeURIComponent(n)+"="+encodeURIComponent(t[n]));return e?"?"+e.join("&"):""},e}),n("models/character",["common/api"],function(t){function e(t,e){this._account=t,this.id=e.characterId}return e.prototype.getGear=function(){var e=this;return new Promise(function(n,r){t.request("GET","/Destiny/"+e._account.type+"/Account/"+e._account.id+"/Character/"+e.id,{definitions:!0}).then(n)["catch"](r)})},e.prototype.getInventory=function(){},e}),n("models/item",["models/bucket"],function(){function t(t,e){return{name:e.statName,value:t.value,description:e.statDescription,icon:"https://www.bungie.net/"+e.icon.replace(/^\//,"")}}function e(e,n){this.id=n.itemHash,this.name=n.itemName,this.type=n.itemType,this.typeName=n.itemType,this.description=n.itemDescription,this.icon="https://www.bungie.net/"+n.icon.replace(/^\//,""),this.stats={},this.primaryStatId=null,this.talentGrid=e.talentGrids[n.talentGridHash],this.tier={type:n.tierType,name:n.tierName};for(var r in n.baseStats){var i=n.baseStats[r],o=e.stats[i.statHash];this.stats[o.statIdentifier]=t(i,o)}var s=n.primaryBaseStat,c=e.stats[s.statHash];this.primaryStatId=c.statIdentifier,this.stats[this.primaryStatId]=t(s,c)}return e}),n("models/bucket",["models/item"],function(t){function e(e,n){var r=e.buckets[n.bucketHash];this.name=r.bucketName,this.order=r.bucketOrder,this.description=r.bucketDescription,this.items=[];for(var i in n.items){var o=n.items[i],s=e.items[o.itemHash];this.items.push(new t(e,s))}}return e}),n("models/vault",["models/bucket"],function(t){function e(e,n){for(var r in n.buckets)new t(e,n.buckets[r])}return e}),n("models/account",["common/api","models/character","models/vault"],function(t,e,n){function r(t){var n=this;this.id=t.userInfo.membershipId,this.type=t.userInfo.membershipType,this.lastPlayed=t.lastPlayed,this.grimoire=t.grimoireScore,this.avatar="https://www.bungie.net/"+t.userInfo.iconPath.replace(/^\//,""),this.characters=t.characters.map(function(t){return new e(n,t)})}return r.prototype.isXBL=function(){return 1===this.type},r.prototype.isPSN=function(){return 2===this.type},r.prototype.getCharacters=function(){return this.characters},r.prototype.getVault=function(){var e=this;return new Promise(function(r,i){t.requestWithToken("GET","/Destiny/"+e.type+"/MyAccount/Vault",{definitions:!0}).then(function(t){var e=new n(t.definitions,t.data);r(e)})["catch"](i)})},r}),n("common/bungie",["common/utils","common/api","models/account"],function(t,e,n){function r(t,n){t&&(e.key=t),n&&(e.base=n),this._accounts=[],this._authed=!1}return r.prototype.authorize=function(){var t=this;return new Promise(function(r,i){e.requestWithToken("GET","/User/GetBungieNetUser").then(function(o){var s=-1;if(o.hasOwnProperty("gamerTag"))s=1;else{if(!o.hasOwnProperty("psnId"))throw new Error("Unknown user type.");s=2}e.requestWithToken("GET","/User/GetBungieAccount/"+o.user.membershipId+"/0").then(function(e){t._authed=!0;for(var i in e.destinyAccounts)t._accounts.push(new n(e.destinyAccounts[i]));r()})["catch"](i)})["catch"](i)})},r.prototype.getAccounts=function(){if(!this._authed)throw new Error("Not authenticated.");return this._accounts},new r}),n("DestinyCTRL",["common/bungie"],function(t){function e(){}return e.initialize=function(){t.authorize()["catch"](function(){alert("You're not logged in.")}).then(function(){var e=t.getAccounts();e[0].getVault().then(function(){})})},e}),e(["common/utils","DestinyCTRL"],function(t,e){if(!window.hasOwnProperty("chrome"))throw new Error("Browser not supported");chrome.browserAction.onClicked.addListener(function(){var e=chrome.extension.getURL("index.html"),n=function(n){try{n.length?chrome.tabs.update(n[0].id,{active:!0}):chrome.tabs.create({url:e})}catch(r){t.handleError(r)}};try{chrome.tabs.query({url:e},n)}catch(r){t.handleError(r)}}),e.initialize()}),n("main",function(){})}();
-//# sourceMappingURL=main.js
+(function () {/**
+ * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/almond for details
+ */
+//Going sloppy to avoid 'use strict' string cost, but strict practices should
+//be followed.
+/*jslint sloppy: true */
+/*global setTimeout: false */
+
+var requirejs, require, define;
+(function (undef) {
+    var main, req, makeMap, handlers,
+        defined = {},
+        waiting = {},
+        config = {},
+        defining = {},
+        hasOwn = Object.prototype.hasOwnProperty,
+        aps = [].slice,
+        jsSuffixRegExp = /\.js$/;
+
+    function hasProp(obj, prop) {
+        return hasOwn.call(obj, prop);
+    }
+
+    /**
+     * Given a relative module name, like ./something, normalize it to
+     * a real name that can be mapped to a path.
+     * @param {String} name the relative name
+     * @param {String} baseName a real name that the name arg is relative
+     * to.
+     * @returns {String} normalized name
+     */
+    function normalize(name, baseName) {
+        var nameParts, nameSegment, mapValue, foundMap, lastIndex,
+            foundI, foundStarMap, starI, i, j, part,
+            baseParts = baseName && baseName.split("/"),
+            map = config.map,
+            starMap = (map && map['*']) || {};
+
+        //Adjust any relative paths.
+        if (name && name.charAt(0) === ".") {
+            //If have a base name, try to normalize against it,
+            //otherwise, assume it is a top-level require that will
+            //be relative to baseUrl in the end.
+            if (baseName) {
+                name = name.split('/');
+                lastIndex = name.length - 1;
+
+                // Node .js allowance:
+                if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
+                    name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
+                }
+
+                //Lop off the last part of baseParts, so that . matches the
+                //"directory" and not name of the baseName's module. For instance,
+                //baseName of "one/two/three", maps to "one/two/three.js", but we
+                //want the directory, "one/two" for this normalization.
+                name = baseParts.slice(0, baseParts.length - 1).concat(name);
+
+                //start trimDots
+                for (i = 0; i < name.length; i += 1) {
+                    part = name[i];
+                    if (part === ".") {
+                        name.splice(i, 1);
+                        i -= 1;
+                    } else if (part === "..") {
+                        if (i === 1 && (name[2] === '..' || name[0] === '..')) {
+                            //End of the line. Keep at least one non-dot
+                            //path segment at the front so it can be mapped
+                            //correctly to disk. Otherwise, there is likely
+                            //no path mapping for a path starting with '..'.
+                            //This can still fail, but catches the most reasonable
+                            //uses of ..
+                            break;
+                        } else if (i > 0) {
+                            name.splice(i - 1, 2);
+                            i -= 2;
+                        }
+                    }
+                }
+                //end trimDots
+
+                name = name.join("/");
+            } else if (name.indexOf('./') === 0) {
+                // No baseName, so this is ID is resolved relative
+                // to baseUrl, pull off the leading dot.
+                name = name.substring(2);
+            }
+        }
+
+        //Apply map config if available.
+        if ((baseParts || starMap) && map) {
+            nameParts = name.split('/');
+
+            for (i = nameParts.length; i > 0; i -= 1) {
+                nameSegment = nameParts.slice(0, i).join("/");
+
+                if (baseParts) {
+                    //Find the longest baseName segment match in the config.
+                    //So, do joins on the biggest to smallest lengths of baseParts.
+                    for (j = baseParts.length; j > 0; j -= 1) {
+                        mapValue = map[baseParts.slice(0, j).join('/')];
+
+                        //baseName segment has  config, find if it has one for
+                        //this name.
+                        if (mapValue) {
+                            mapValue = mapValue[nameSegment];
+                            if (mapValue) {
+                                //Match, update name to the new value.
+                                foundMap = mapValue;
+                                foundI = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (foundMap) {
+                    break;
+                }
+
+                //Check for a star map match, but just hold on to it,
+                //if there is a shorter segment match later in a matching
+                //config, then favor over this star map.
+                if (!foundStarMap && starMap && starMap[nameSegment]) {
+                    foundStarMap = starMap[nameSegment];
+                    starI = i;
+                }
+            }
+
+            if (!foundMap && foundStarMap) {
+                foundMap = foundStarMap;
+                foundI = starI;
+            }
+
+            if (foundMap) {
+                nameParts.splice(0, foundI, foundMap);
+                name = nameParts.join('/');
+            }
+        }
+
+        return name;
+    }
+
+    function makeRequire(relName, forceSync) {
+        return function () {
+            //A version of a require function that passes a moduleName
+            //value for items that may need to
+            //look up paths relative to the moduleName
+            var args = aps.call(arguments, 0);
+
+            //If first arg is not require('string'), and there is only
+            //one arg, it is the array form without a callback. Insert
+            //a null so that the following concat is correct.
+            if (typeof args[0] !== 'string' && args.length === 1) {
+                args.push(null);
+            }
+            return req.apply(undef, args.concat([relName, forceSync]));
+        };
+    }
+
+    function makeNormalize(relName) {
+        return function (name) {
+            return normalize(name, relName);
+        };
+    }
+
+    function makeLoad(depName) {
+        return function (value) {
+            defined[depName] = value;
+        };
+    }
+
+    function callDep(name) {
+        if (hasProp(waiting, name)) {
+            var args = waiting[name];
+            delete waiting[name];
+            defining[name] = true;
+            main.apply(undef, args);
+        }
+
+        if (!hasProp(defined, name) && !hasProp(defining, name)) {
+            throw new Error('No ' + name);
+        }
+        return defined[name];
+    }
+
+    //Turns a plugin!resource to [plugin, resource]
+    //with the plugin being undefined if the name
+    //did not have a plugin prefix.
+    function splitPrefix(name) {
+        var prefix,
+            index = name ? name.indexOf('!') : -1;
+        if (index > -1) {
+            prefix = name.substring(0, index);
+            name = name.substring(index + 1, name.length);
+        }
+        return [prefix, name];
+    }
+
+    /**
+     * Makes a name map, normalizing the name, and using a plugin
+     * for normalization if necessary. Grabs a ref to plugin
+     * too, as an optimization.
+     */
+    makeMap = function (name, relName) {
+        var plugin,
+            parts = splitPrefix(name),
+            prefix = parts[0];
+
+        name = parts[1];
+
+        if (prefix) {
+            prefix = normalize(prefix, relName);
+            plugin = callDep(prefix);
+        }
+
+        //Normalize according
+        if (prefix) {
+            if (plugin && plugin.normalize) {
+                name = plugin.normalize(name, makeNormalize(relName));
+            } else {
+                name = normalize(name, relName);
+            }
+        } else {
+            name = normalize(name, relName);
+            parts = splitPrefix(name);
+            prefix = parts[0];
+            name = parts[1];
+            if (prefix) {
+                plugin = callDep(prefix);
+            }
+        }
+
+        //Using ridiculous property names for space reasons
+        return {
+            f: prefix ? prefix + '!' + name : name, //fullName
+            n: name,
+            pr: prefix,
+            p: plugin
+        };
+    };
+
+    function makeConfig(name) {
+        return function () {
+            return (config && config.config && config.config[name]) || {};
+        };
+    }
+
+    handlers = {
+        require: function (name) {
+            return makeRequire(name);
+        },
+        exports: function (name) {
+            var e = defined[name];
+            if (typeof e !== 'undefined') {
+                return e;
+            } else {
+                return (defined[name] = {});
+            }
+        },
+        module: function (name) {
+            return {
+                id: name,
+                uri: '',
+                exports: defined[name],
+                config: makeConfig(name)
+            };
+        }
+    };
+
+    main = function (name, deps, callback, relName) {
+        var cjsModule, depName, ret, map, i,
+            args = [],
+            callbackType = typeof callback,
+            usingExports;
+
+        //Use name if no relName
+        relName = relName || name;
+
+        //Call the callback to define the module, if necessary.
+        if (callbackType === 'undefined' || callbackType === 'function') {
+            //Pull out the defined dependencies and pass the ordered
+            //values to the callback.
+            //Default to [require, exports, module] if no deps
+            deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
+            for (i = 0; i < deps.length; i += 1) {
+                map = makeMap(deps[i], relName);
+                depName = map.f;
+
+                //Fast path CommonJS standard dependencies.
+                if (depName === "require") {
+                    args[i] = handlers.require(name);
+                } else if (depName === "exports") {
+                    //CommonJS module spec 1.1
+                    args[i] = handlers.exports(name);
+                    usingExports = true;
+                } else if (depName === "module") {
+                    //CommonJS module spec 1.1
+                    cjsModule = args[i] = handlers.module(name);
+                } else if (hasProp(defined, depName) ||
+                           hasProp(waiting, depName) ||
+                           hasProp(defining, depName)) {
+                    args[i] = callDep(depName);
+                } else if (map.p) {
+                    map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
+                    args[i] = defined[depName];
+                } else {
+                    throw new Error(name + ' missing ' + depName);
+                }
+            }
+
+            ret = callback ? callback.apply(defined[name], args) : undefined;
+
+            if (name) {
+                //If setting exports via "module" is in play,
+                //favor that over return value and exports. After that,
+                //favor a non-undefined return value over exports use.
+                if (cjsModule && cjsModule.exports !== undef &&
+                        cjsModule.exports !== defined[name]) {
+                    defined[name] = cjsModule.exports;
+                } else if (ret !== undef || !usingExports) {
+                    //Use the return value from the function.
+                    defined[name] = ret;
+                }
+            }
+        } else if (name) {
+            //May just be an object definition for the module. Only
+            //worry about defining if have a module name.
+            defined[name] = callback;
+        }
+    };
+
+    requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
+        if (typeof deps === "string") {
+            if (handlers[deps]) {
+                //callback in this case is really relName
+                return handlers[deps](callback);
+            }
+            //Just return the module wanted. In this scenario, the
+            //deps arg is the module name, and second arg (if passed)
+            //is just the relName.
+            //Normalize module name, if it contains . or ..
+            return callDep(makeMap(deps, callback).f);
+        } else if (!deps.splice) {
+            //deps is a config object, not an array.
+            config = deps;
+            if (config.deps) {
+                req(config.deps, config.callback);
+            }
+            if (!callback) {
+                return;
+            }
+
+            if (callback.splice) {
+                //callback is an array, which means it is a dependency list.
+                //Adjust args if there are dependencies
+                deps = callback;
+                callback = relName;
+                relName = null;
+            } else {
+                deps = undef;
+            }
+        }
+
+        //Support require(['a'])
+        callback = callback || function () {};
+
+        //If relName is a function, it is an errback handler,
+        //so remove it.
+        if (typeof relName === 'function') {
+            relName = forceSync;
+            forceSync = alt;
+        }
+
+        //Simulate async callback;
+        if (forceSync) {
+            main(undef, deps, callback, relName);
+        } else {
+            //Using a non-zero value because of concern for what old browsers
+            //do, and latest browsers "upgrade" to 4 if lower value is used:
+            //http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout:
+            //If want a value immediately, use require('id') instead -- something
+            //that works in almond on the global level, but not guaranteed and
+            //unlikely to work in other AMD implementations.
+            setTimeout(function () {
+                main(undef, deps, callback, relName);
+            }, 4);
+        }
+
+        return req;
+    };
+
+    /**
+     * Just drops the config on the floor, but returns req in case
+     * the config return value is used.
+     */
+    req.config = function (cfg) {
+        return req(cfg);
+    };
+
+    /**
+     * Expose module registry for debugging and tooling
+     */
+    requirejs._defined = defined;
+
+    define = function (name, deps, callback) {
+        if (typeof name !== 'string') {
+            throw new Error('See almond README: incorrect module build, no module name');
+        }
+
+        //This module may not have dependencies
+        if (!deps.splice) {
+            //deps is not an array, so probably means
+            //an object literal or factory function for
+            //the value. Adjust args.
+            callback = deps;
+            deps = [];
+        }
+
+        if (!hasProp(defined, name) && !hasProp(waiting, name)) {
+            waiting[name] = [name, deps, callback];
+        }
+    };
+
+    define.amd = {
+        jQuery: true
+    };
+}());
+
+define("vendor/almond", function(){});
+
+define('common/utils',[],function() {
+  function Util() {}
+
+  Util.getCookie = function(name) {
+    return new Promise(function(resolve, reject) {
+      if(window.hasOwnProperty('chrome') && chrome.hasOwnProperty('cookies')) {
+        chrome.cookies.get({
+          name : name,
+          url : 'https://www.bungie.net'
+        }, function(cookie) {
+          if(cookie) {
+            resolve(cookie.value);
+          } else {
+            reject();
+          }
+        }.bind(this));
+      }
+      else {
+        reject();
+      }
+    }.bind(this));
+  };
+
+  Util.logError = function(err) {
+    if(err instanceof Error) {
+      throw err;
+    } else {
+      console.error('Error[' + err.ErrorCode + '] -> "' + err.Message + '"');
+    }
+  };
+
+  return Util;
+});
+
+define('common/api',['common/utils'], function(Util) {
+  function API() {}
+
+  API.key = null;
+  API.base = 'https://www.bungie.net/Platform';
+
+  API.requestWithToken = function() {
+    var _self = this;
+    var _args = [].slice.call(arguments);
+
+    return new Promise(function(resolve, reject) {
+      Util.getCookie('bungled').then(function(csrfToken) {
+        var _deleteCSRF = function() {
+          delete _self._csrf;
+        };
+
+        _self._csrf = csrfToken;
+
+        API.request.apply(_self, _args)
+          .then(resolve)
+          .catch(reject)
+          .then(_deleteCSRF);
+      })
+    });
+  };
+
+  API.request = function(method, endpoint, params, payload) {
+    var _self = this;
+
+    return new Promise(function(resolve, reject) {
+      var xhr = new XMLHttpRequest();
+
+      xhr.onload = function() {
+        var raw = this.response;
+        var resp = JSON.parse(raw);
+
+        if (this.status >= 200 && this.status < 400) {
+          if(resp.ErrorCode > 1) {
+            reject(resp);
+          }
+          else {
+            resolve(resp.Response);
+          }
+        } else {
+          reject(resp);
+        }
+      };
+
+      xhr.onerror = function() {
+        var raw = this.response
+        var resp = JSON.parse(raw);
+
+        reject(resp);
+      };
+
+      var url = [
+        API.base.replace(/(\/$)/, ''),
+        endpoint.replace(/(^\/|\/$)/, '')
+      ].join('/') + '/' + API.objectToQueryString(params || {});
+
+      xhr.open(method, url, true);
+
+      if(_self._csrf) {
+        xhr.withCredentials = true;
+
+        xhr.setRequestHeader('X-CSRF', _self._csrf);
+      }
+
+      xhr.setRequestHeader('X-API-Key', API.key);
+
+      xhr.send(payload);
+    });
+  };
+
+  API.objectToQueryString = function(obj) {
+    var params = [];
+
+    for(var key in obj) {
+      params.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+    }
+
+    return params ? '?' + params.join('&') : '';
+  };
+
+  return API;
+});
+
+define('models/character',['common/api'], function(API) {
+  function Character(account, data) {
+    this._account = account;
+
+    this.id = data.characterId;
+  }
+
+  Character.prototype.getGear = function() {
+    var _self = this;
+
+    return new Promise(function(resolve, reject) {
+      API.request(
+        'GET',
+        '/Destiny/' + _self._account.type +
+        '/Account/' + _self._account.id +
+        '/Character/' + _self.id,
+        { definitions : true }
+      ).then(resolve).catch(reject);
+    });
+  };
+
+  Character.prototype.getInventory = function() {
+    //
+  };
+
+  return Character;
+});
+
+define('models/item',['models/bucket'], function(Bucket) {
+  function createStat(stat, meta) {
+    return {
+      name : meta.statName,
+      value : stat.value,
+      description : meta.statDescription,
+      icon : 'https://www.bungie.net/' + meta.icon.replace(/^\//, '')
+    };
+  }
+
+  function Item(definitions, repo) {
+    var meta = definitions.items[repo.itemHash];
+
+    this.id = repo.itemHash;
+    this.name = meta.itemName;
+    this.type = meta.itemType;
+    this.typeName = meta.itemType;
+    this.description = meta.itemDescription;
+    this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
+    this.stats = {};
+    this.primaryStatId = null;
+    this.talentGrid = [];
+    this.tier = { type : meta.tierType, name : meta.tierName };
+    this._definitions = definitions;
+
+    this._fillBaseStats(repo.stats);
+    this._fillPrimaryStat(meta.primaryBaseStat);
+    this._fillTalentGrid(
+      repo.nodes,
+      definitions.talentGrids[meta.talentGridHash]
+    );
+  }
+
+  Item.prototype._fillBaseStats = function(stats) {
+    stats.forEach(function(stat) {
+      var meta = this._definitions.stats[stat.statHash];
+
+      this.stats[meta.statIdentifier] = createStat(stat, meta);
+    }, this);
+  };
+
+  Item.prototype._fillPrimaryStat = function(stat) {
+    var meta = this._definitions.stats[stat.statHash];
+
+    this.primaryStatId = meta.statIdentifier;
+
+    this.stats[this.primaryStatId] = createStat(stat, meta);
+  };
+
+  Item.prototype._fillTalentGrid = function(itemNodes, talentGrid) {
+    itemNodes.map(function(node, idx) {
+      // The talentGrid maps 1:1 to an
+      // item's "nodes"; Thanks for the confusing
+      // definitions Bungie!
+
+      var talentNode = talentGrid.nodes[idx];
+      var step = talentNode.steps[node.stepIndex];
+
+      return {
+        name : step.nodeStepName,
+        description : step.nodeStepDescription,
+        icon : 'https://www.bungie.net/' + step.icon.replace(/^\//, ''),
+        requirements : step.activationRequirement,
+
+        // We need the row-column data from the
+        // talentGridNode to properly build our
+        // items progression matrix, order isn't
+        // important (we sort that out later)
+
+        row : talentNode.row,
+        column : talentNode.column
+      };
+    }).forEach(function(node) {
+      // We only want rows and columns that
+      // are greater than 1, from what I can
+      // tell anything but that isn't used
+
+      if(node.row > -1 && node.column > -1) {
+        // Build our column-row matrix, again,
+        // not worrying about sort order as we
+        // will handle that later
+
+        if(! this.talentGrid.hasOwnProperty(node.column)) {
+          this.talentGrid[node.column] = [];
+        }
+
+        this.talentGrid[node.column].push(node);
+      }
+    }, this);
+
+    // Sort the row columns just in case
+    // we have them in the wrong order from
+    // the previous operations
+
+    this.talentGrid.forEach(function(column) {
+      column.sort(function(a, b) {
+        return a.row - b.row;
+      });
+    });
+  }
+
+  return Item;
+});
+
+define('models/bucket',['models/item'], function(Item) {
+  function Bucket(definitions, repo) {
+    var bucketMeta = definitions.buckets[repo.bucketHash];
+
+    this.name = bucketMeta.bucketName;
+    this.order = bucketMeta.bucketOrder;
+    this.description = bucketMeta.bucketDescription;
+    this.items = [];
+
+    for(var idx in repo.items) {
+      this.items.push(new Item(definitions, repo.items[idx]));
+    }
+  }
+
+  return Bucket;
+});
+
+define('models/vault',['models/bucket'], function(Bucket) {
+  function Vault(definitions, repo) {
+    this.buckets = [];
+
+    for(var idx in repo.buckets) {
+      this.buckets.push(new Bucket(definitions, repo.buckets[idx]));
+    }
+  }
+
+  return Vault;
+});
+
+define(
+  'models/account',['common/api', 'models/character', 'models/vault'],
+  function(API, Character, Vault) {
+    function Account(data) {
+      var _self = this;
+
+      this.id = data.userInfo.membershipId;
+      this.type = data.userInfo.membershipType;
+      this.lastPlayed = data.lastPlayed;
+      this.grimoire = data.grimoireScore;
+      this.avatar = 'https://www.bungie.net/' +
+        data.userInfo.iconPath.replace(/^\//, '');
+      this.characters = data.characters.map(function(char) {
+        return new Character(_self, char);
+      });
+    }
+
+    Account.prototype.isXBL = function() {
+      return this.type === 1;
+    };
+
+    Account.prototype.isPSN = function() {
+      return this.type === 2;
+    };
+
+    Account.prototype.getCharacters = function() {
+      return this.characters;
+    };
+
+    Account.prototype.getVault = function() {
+      var _self = this;
+
+      return new Promise(function(resolve, reject) {
+        API.requestWithToken(
+          'GET',
+          '/Destiny/' + _self.type +
+          '/MyAccount/Vault',
+          { definitions : true }
+        ).then(function(resp) {
+          var vault = new Vault(resp.definitions, resp.data);
+
+          resolve(vault);
+        }).catch(reject);
+      });
+    }
+
+    return Account;
+  }
+);
+
+define('common/bungie',['common/utils', 'common/api', 'models/account'], function(Util, API, Account) {
+  function Bungie(apiKey, apiBase) {
+    if(apiKey) {
+      API.key = apiKey;
+    }
+
+    if(apiBase) {
+      API.base = apiBase;
+    }
+
+    this._accounts = [];
+    this._authed = false;
+  }
+
+  // Instance
+
+  Bungie.prototype.authorize = function() {
+    var _self = this;
+
+    return new Promise(function(resolve, reject) {
+      API.requestWithToken('GET', '/User/GetBungieNetUser')
+        .then(function(user) {
+          var _type = -1;
+
+          if(user.hasOwnProperty('gamerTag')) {
+            _type = 1;
+          }
+          else if(user.hasOwnProperty('psnId')) {
+            _type = 2;
+          }
+          else {
+            throw new Error('Unknown user type.');
+          }
+
+          API.requestWithToken(
+            'GET',
+            '/User/GetBungieAccount/' + user.user.membershipId +
+            '/0'
+          ).then(function(user) {
+            _self._authed = true;
+
+            for(var accountIdx in user.destinyAccounts) {
+              _self._accounts
+                .push(new Account(user.destinyAccounts[accountIdx]));
+            }
+
+            resolve();
+          }).catch(reject);
+        }).catch(reject);
+    });
+  };
+
+  Bungie.prototype.getAccounts = function() {
+    if(! this._authed) {
+      throw new Error('Not authenticated.');
+    }
+
+    return this._accounts;
+  };
+
+  return new Bungie();
+});
+
+define('DestinyCTRL',['common/bungie'], function(Bungie) {
+  function DestinyCTRL() {}
+
+  DestinyCTRL.initialize = function() {
+    var _self = this;
+
+    Bungie.authorize().catch(function() {
+      alert('You\'re not logged in.');
+    }).then(function() {
+      var accounts = Bungie.getAccounts();
+
+      accounts[0].getVault();
+    });
+  };
+
+  return DestinyCTRL;
+});
+
+require(['common/utils', 'DestinyCTRL'], function(Util, DestinyCTRL) {
+  if(window.hasOwnProperty('chrome')) {
+    chrome.browserAction.onClicked.addListener(function() {
+      var index = chrome.extension.getURL('index.html');
+      var query = function(tabs) {
+        try {
+          if(tabs.length) {
+            chrome.tabs.update(tabs[0].id, {
+              active : true
+            });
+          } else {
+            chrome.tabs.create({
+              url : index
+            });
+          }
+        } catch(err)  {
+          Util.handleError(err);
+        }
+      };
+
+      try {
+        chrome.tabs.query({ url : index }, query);
+      } catch (err) {
+        Util.handleError(err);
+      }
+    });
+  } else {
+    throw new Error('Browser not supported');
+  }
+
+  DestinyCTRL.initialize();
+});
+
+define("main", function(){});
+
+}());
 //# sourceMappingURL=main.js.map
