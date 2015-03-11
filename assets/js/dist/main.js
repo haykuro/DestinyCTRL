@@ -643,6 +643,7 @@ define('models/item',['models/bucket'], function(Bucket) {
         description : step.nodeStepDescription,
         icon : 'https://www.bungie.net/' + step.icon.replace(/^\//, ''),
         requirements : step.activationRequirement,
+        active : node.isActivated,
 
         // We need the row-column data from the
         // talentGridNode to properly build our
