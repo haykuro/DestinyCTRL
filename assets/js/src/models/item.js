@@ -7,7 +7,18 @@ define(['models/bucket'], function(Bucket) {
     this.description = meta.itemDescription;
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stackSize = repo.stackSize;
+    this.type = meta.itemType;
+    this.typeName = meta.itemTypeName;
+    this.tier = { type : meta.tierType, name : meta.tierName };
   }
+
+  Item.prototype.isMaterial = function() {
+    return this.type === 0;
+  };
+
+  Item.prototype.isConsumable = function() {
+    return this.type === 9;
+  };
 
   return Item;
 });
