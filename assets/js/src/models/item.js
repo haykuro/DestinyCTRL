@@ -1,4 +1,4 @@
-define(['models/bucket'], function(Bucket) {
+define(function() {
   function Item(definitions, repo) {
     var meta = definitions.items[repo.itemHash];
 
