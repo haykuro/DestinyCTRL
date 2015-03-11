@@ -20,7 +20,15 @@ define(['models/item', 'models/equipment'], function(Item, Equipment) {
     }
   }
 
-  Bucket.prototype.getItems = function() {
+  Bucket.prototype.getItems = function(filter) {
+    if(typeof filter === 'string') {
+      return this.items.filter(function(item) {
+        return item.type.bucket === filter;
+      });
+    } else if(typeof filter === 'function') {
+      return this.items.filter(filter);
+    }
+
     return this.items;
   };
 
