@@ -21,7 +21,9 @@ define(function() {
     this.stats = {};
     this.primaryStatId = null;
     this.talentGrid = [];
-    this.tier = { type : meta.tierType, name : meta.tierName };
+    this.tier = { type : meta.tierType, name : meta.tierTypeName };
+
+    console.log(meta);
 
     this._definitions = definitions;
 

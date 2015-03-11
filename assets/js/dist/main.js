@@ -582,7 +582,9 @@ define('models/equipment',[],function() {
     this.stats = {};
     this.primaryStatId = null;
     this.talentGrid = [];
-    this.tier = { type : meta.tierType, name : meta.tierName };
+    this.tier = { type : meta.tierType, name : meta.tierTypeName };
+
+    console.log(meta);
 
     this._definitions = definitions;
 
@@ -687,7 +689,7 @@ define('models/character',['common/api', 'models/equipment'], function(API, Equi
     this.equipment = [];
     this.inventory = [];
 
-    this.sync();
+    // this.sync();
   }
 
   Character.prototype.sync = function() {
@@ -932,8 +934,6 @@ define('DestinyCTRL',['common/bungie'], function(Bungie) {
     var _self = this;
 
     Bungie.authorize().then(function() {
-      // Do something awesome.... or not... whatever
-
       var accounts = Bungie.getAccounts();
 
       if(accounts.length) {
@@ -945,8 +945,9 @@ define('DestinyCTRL',['common/bungie'], function(Bungie) {
 
             bucket.getItems().forEach(function(item) {
               var $item = $('<li />');
-              var $icon = $('<img />')
-                .attr('src', item.icon);
+              var $icon = $('<img />').attr('src', item.icon);
+
+              // console.log(item);
 
               $item.append($icon);
               $bucket.append($item);

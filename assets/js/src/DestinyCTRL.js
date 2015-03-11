@@ -5,8 +5,6 @@ define(['common/bungie'], function(Bungie) {
     var _self = this;
 
     Bungie.authorize().then(function() {
-      // Do something awesome.... or not... whatever
-
       var accounts = Bungie.getAccounts();
 
       if(accounts.length) {
@@ -18,8 +16,9 @@ define(['common/bungie'], function(Bungie) {
 
             bucket.getItems().forEach(function(item) {
               var $item = $('<li />');
-              var $icon = $('<img />')
-                .attr('src', item.icon);
+              var $icon = $('<img />').attr('src', item.icon);
+
+              // console.log(item);
 
               $item.append($icon);
               $bucket.append($item);
