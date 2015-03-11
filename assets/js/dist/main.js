@@ -444,12 +444,12 @@ define('common/utils',[],function() {
           if(cookie) {
             resolve(cookie.value);
           } else {
-            reject();
+            reject(Util.createError('Cookie does not exist'));
           }
         }.bind(this));
       }
       else {
-        reject();
+        reject(Util.createError('Browser is not supported'));
       }
     }.bind(this));
   };
@@ -460,6 +460,13 @@ define('common/utils',[],function() {
     } else {
       console.error('Error[' + err.ErrorCode + '] -> "' + err.Message + '"');
     }
+  };
+
+  Util.createError = function(msg, code) {
+    return {
+      ErrorCode : msg.ErrorCode || code || -1,
+      Message : msg.Message || msg
+    };
   };
 
   return Util;
@@ -485,9 +492,9 @@ define('common/api',['common/utils'], function(Util) {
 
         API.request.apply(_self, _args)
           .then(resolve)
-          .catch(reject)
-          .then(_deleteCSRF);
-      })
+          .then(_deleteCSRF)
+          .catch(reject);
+      }).catch(reject);
     });
   };
 
@@ -552,49 +559,7 @@ define('common/api',['common/utils'], function(Util) {
   return API;
 });
 
-define('models/character',['common/api'], function(API) {
-  function Character(account, data) {
-    this._account = account;
-
-    this.id = data.characterId;
-  }
-
-  Character.prototype.getGear = function() {
-    var _self = this;
-
-    return new Promise(function(resolve, reject) {
-      API.request(
-        'GET',
-        '/Destiny/' + _self._account.type +
-        '/Account/' + _self._account.id +
-        '/Character/' + _self.id,
-        { definitions : true }
-      ).then(resolve).catch(reject);
-    });
-  };
-
-  Character.prototype.getInventory = function() {
-    //
-  };
-
-  return Character;
-});
-
-define('models/item',['models/bucket'], function(Bucket) {
-  function Item(definitions, repo) {
-    var meta = definitions.items[repo.itemHash];
-
-    this.id = repo.itemHash;
-    this.name = meta.itemName;
-    this.description = meta.itemDescription;
-    this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
-    this.stackSize = repo.stackSize;
-  }
-
-  return Item;
-});
-
-define('models/equipment',['models/bucket'], function(Bucket) {
+define('models/equipment',[],function() {
   function createStat(stat, meta) {
     return {
       name : meta.statName,
@@ -604,7 +569,7 @@ define('models/equipment',['models/bucket'], function(Bucket) {
     };
   }
 
-  function Item(definitions, repo) {
+  function Equipment(definitions, repo) {
     var meta = definitions.items[repo.itemHash];
 
     this.id = repo.itemHash;
@@ -621,17 +586,25 @@ define('models/equipment',['models/bucket'], function(Bucket) {
 
     this._definitions = definitions;
 
-    this._fillBaseStats(repo.stats);
-    this._fillPrimaryStat(meta.primaryBaseStat);
-    this._fillTalentGrid(
-      repo.nodes,
-      definitions.talentGrids[meta.talentGridHash]
-    );
+    if(repo.baseStats) {
+      this._fillBaseStats(repo.baseStats);
+    }
+
+    if(meta.primaryBaseStat) {
+      this._fillPrimaryStat(meta.primaryBaseStat);
+    }
+
+    if(repo.nodes) {
+      this._fillTalentGrid(
+        repo.nodes,
+        definitions.talentGrids[meta.talentGridHash]
+      );
+    }
 
     delete this._definitions;
   }
 
-  Item.prototype._fillBaseStats = function(stats) {
+  Equipment.prototype._fillBaseStats = function(stats) {
     stats.forEach(function(stat) {
       var meta = this._definitions.stats[stat.statHash];
 
@@ -639,7 +612,7 @@ define('models/equipment',['models/bucket'], function(Bucket) {
     }, this);
   };
 
-  Item.prototype._fillPrimaryStat = function(stat) {
+  Equipment.prototype._fillPrimaryStat = function(stat) {
     var meta = this._definitions.stats[stat.statHash];
 
     this.primaryStatId = meta.statIdentifier;
@@ -647,7 +620,7 @@ define('models/equipment',['models/bucket'], function(Bucket) {
     this.stats[this.primaryStatId] = createStat(stat, meta);
   };
 
-  Item.prototype._fillTalentGrid = function(itemNodes, talentGrid) {
+  Equipment.prototype._fillTalentGrid = function(itemNodes, talentGrid) {
     itemNodes.map(function(node, idx) {
       // The talentGrid maps 1:1 to an
       // item's "nodes"; Thanks for the confusing
@@ -700,6 +673,83 @@ define('models/equipment',['models/bucket'], function(Bucket) {
     });
   }
 
+  return Equipment;
+});
+
+define('models/character',['common/api', 'models/equipment'], function(API, Equipment) {
+  function Character(account, data) {
+    this._account = account;
+
+    this.id = data.characterId;
+    this.emblem = null;
+    this.background = null;
+    this.level = 0;
+    this.equipment = [];
+    this.inventory = [];
+
+    this.sync();
+  }
+
+  Character.prototype.sync = function() {
+    var _self = this;
+
+    API.requestWithToken(
+      'GET',
+      '/Destiny/' + _self._account.type +
+      '/Account/' + _self._account.id +
+      '/Character/' + _self.id,
+      { definitions : true }
+    ).then(function(resp) {
+      var repo = resp.data;
+      var definitions = resp.definitions;
+
+      _self.level = repo.characterLevel;
+      _self.emblem = 'https://www.bungie.net/' +
+        repo.emblemPath.replace(/^\//, '');
+      _self.background = 'https://www.bungie.net/' +
+        repo.backgroundPath.replace(/^\//, '');
+      _self.equipment = repo.characterBase
+        .peerView.equipment.map(function(equipment) {
+          var item = definitions.items[equipment.itemHash];
+
+          return new Equipment(definitions, item);
+        });
+    });
+  };
+
+  Character.prototype.getEquipment = function() {
+    return this.equipment;
+  };
+
+  Character.prototype.getInventory = function() {
+    return this.inventory;
+  };
+
+  return Character;
+});
+
+define('models/item',[],function() {
+  function Item(definitions, repo) {
+    var meta = definitions.items[repo.itemHash];
+
+    this.id = repo.itemHash;
+    this.name = meta.itemName;
+    this.description = meta.itemDescription;
+    this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
+    this.stackSize = repo.stackSize;
+    this.type = meta.itemType;
+    this.typeName = meta.itemTypeName;
+    this.tier = { type : meta.tierType, name : meta.tierName };
+  }
+
+  Item.prototype.isMaterial = function() {
+    return this.type === 0;
+  };
+
+  Item.prototype.isConsumable = function() {
+    return this.type === 9;
+  };
+
   return Item;
 });
 
@@ -707,7 +757,9 @@ define('models/bucket',['models/item', 'models/equipment'], function(Item, Equip
   function Bucket(definitions, repo) {
     var bucketMeta = definitions.buckets[repo.bucketHash];
 
+    this.id = repo.bucketHash;
     this.name = bucketMeta.bucketName;
+    this.type = bucketMeta.bucketIdentifier;
     this.order = bucketMeta.bucketOrder;
     this.description = bucketMeta.bucketDescription;
     this.items = [];
@@ -723,6 +775,10 @@ define('models/bucket',['models/item', 'models/equipment'], function(Item, Equip
     }
   }
 
+  Bucket.prototype.getItems = function() {
+    return this.items;
+  };
+
   return Bucket;
 });
 
@@ -734,6 +790,40 @@ define('models/vault',['models/bucket'], function(Bucket) {
       return a.order - b.order;
     });
   }
+
+  Vault.prototype._getBucketByType = function(type) {
+    var _bucket = null;
+
+    this.buckets.some(function(bucket) {
+      if(bucket.type === type) {
+        _bucket = bucket;
+
+        return true;
+      }
+
+      return false;
+    });
+
+    return _bucket;
+  };
+
+  Vault.prototype.getAll = function() {
+    return this.buckets.reduce(function(memo, bucket) {
+      return memo.concat([bucket]);
+    }, []);
+  };
+
+  Vault.prototype.getGeneral = function() {
+    return this._getBucketByType('BUCKET_VAULT_ITEMS');
+  };
+
+  Vault.prototype.getWeapons = function() {
+    return this._getBucketByType('BUCKET_VAULT_WEAPONS');
+  };
+
+  Vault.prototype.getArmor = function() {
+    return this._getBucketByType('BUCKET_VAULT_ARMOR');
+  };
 
   return Vault;
 });
@@ -810,18 +900,6 @@ define('common/bungie',['common/utils', 'common/api', 'models/account'], functio
     return new Promise(function(resolve, reject) {
       API.requestWithToken('GET', '/User/GetBungieNetUser')
         .then(function(user) {
-          var _type = -1;
-
-          if(user.hasOwnProperty('gamerTag')) {
-            _type = 1;
-          }
-          else if(user.hasOwnProperty('psnId')) {
-            _type = 2;
-          }
-          else {
-            throw new Error('Unknown user type.');
-          }
-
           API.requestWithToken(
             'GET',
             '/User/GetBungieAccount/' +
@@ -854,13 +932,7 @@ define('DestinyCTRL',['common/bungie'], function(Bungie) {
     var _self = this;
 
     Bungie.authorize().then(function() {
-      var accounts = Bungie.getAccounts();
-
-      if(accounts.length) {
-        accounts[0].getVault().then(function(vault) {
-          console.log(vault);
-        });
-      }
+      // Do something awesome.... or not... whatever
     }).catch(function(err) {
       alert(err.Message);
     });
