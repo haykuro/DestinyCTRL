@@ -581,6 +581,20 @@ define('models/character',['common/api'], function(API) {
 });
 
 define('models/item',['models/bucket'], function(Bucket) {
+  function Item(definitions, repo) {
+    var meta = definitions.items[repo.itemHash];
+
+    this.id = repo.itemHash;
+    this.name = meta.itemName;
+    this.description = meta.itemDescription;
+    this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
+    this.stackSize = repo.stackSize;
+  }
+
+  return Item;
+});
+
+define('models/equipment',['models/bucket'], function(Bucket) {
   function createStat(stat, meta) {
     return {
       name : meta.statName,
@@ -596,7 +610,8 @@ define('models/item',['models/bucket'], function(Bucket) {
     this.id = repo.itemHash;
     this.name = meta.itemName;
     this.type = meta.itemType;
-    this.typeName = meta.itemType;
+    this.typeName = meta.itemTypeName;
+    this.level = repo.itemLevel;
     this.description = meta.itemDescription;
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stats = {};
@@ -688,7 +703,7 @@ define('models/item',['models/bucket'], function(Bucket) {
   return Item;
 });
 
-define('models/bucket',['models/item'], function(Item) {
+define('models/bucket',['models/item', 'models/equipment'], function(Item, Equipment) {
   function Bucket(definitions, repo) {
     var bucketMeta = definitions.buckets[repo.bucketHash];
 
@@ -698,7 +713,13 @@ define('models/bucket',['models/item'], function(Item) {
     this.items = [];
 
     for(var idx in repo.items) {
-      this.items.push(new Item(definitions, repo.items[idx]));
+      var item = repo.items[idx];
+
+      if(item.isEquipment) {
+        this.items.push(new Equipment(definitions, item));
+      } else {
+        this.items.push(new Item(definitions, item));
+      }
     }
   }
 
@@ -707,11 +728,11 @@ define('models/bucket',['models/item'], function(Item) {
 
 define('models/vault',['models/bucket'], function(Bucket) {
   function Vault(definitions, repo) {
-    this.buckets = [];
-
-    for(var idx in repo.buckets) {
-      this.buckets.push(new Bucket(definitions, repo.buckets[idx]));
-    }
+    this.buckets = repo.buckets.map(function(bucket) {
+      return new Bucket(definitions, bucket);
+    }).sort(function(a, b) {
+      return a.order - b.order;
+    });
   }
 
   return Vault;
