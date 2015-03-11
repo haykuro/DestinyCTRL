@@ -11,7 +11,8 @@
     'models/character',
     'models/vault',
     'models/bucket',
-    'models/item'
+    'models/item',
+    'models/equipment'
   ],
   out : 'assets/js/dist/main.js',
   wrap : true,
