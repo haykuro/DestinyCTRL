@@ -20,18 +20,6 @@ define(['common/utils', 'common/api', 'models/account'], function(Util, API, Acc
     return new Promise(function(resolve, reject) {
       API.requestWithToken('GET', '/User/GetBungieNetUser')
         .then(function(user) {
-          var _type = -1;
-
-          if(user.hasOwnProperty('gamerTag')) {
-            _type = 1;
-          }
-          else if(user.hasOwnProperty('psnId')) {
-            _type = 2;
-          }
-          else {
-            throw new Error('Unknown user type.');
-          }
-
           API.requestWithToken(
             'GET',
             '/User/GetBungieAccount/' +
