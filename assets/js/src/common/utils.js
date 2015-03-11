@@ -11,12 +11,12 @@ define(function() {
           if(cookie) {
             resolve(cookie.value);
           } else {
-            reject();
+            reject(Util.createError('Cookie does not exist'));
           }
         }.bind(this));
       }
       else {
-        reject();
+        reject(Util.createError('Browser is not supported'));
       }
     }.bind(this));
   };
@@ -27,6 +27,13 @@ define(function() {
     } else {
       console.error('Error[' + err.ErrorCode + '] -> "' + err.Message + '"');
     }
+  };
+
+  Util.createError = function(msg, code) {
+    return {
+      ErrorCode : msg.ErrorCode || code || -1,
+      Message : msg.Message || msg
+    };
   };
 
   return Util;
