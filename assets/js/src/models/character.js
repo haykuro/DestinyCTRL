@@ -36,8 +36,6 @@ define(['common/api', 'models/equipment'], function(API, Equipment) {
 
           return new Equipment(definitions, item);
         });
-
-      console.log(_self);
     });
   };
 
