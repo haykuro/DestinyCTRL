@@ -1,4 +1,4 @@
-define(['models/bucket'], function(Bucket) {
+define(function() {
   function createStat(stat, meta) {
     return {
       name : meta.statName,
@@ -8,7 +8,7 @@ define(['models/bucket'], function(Bucket) {
     };
   }
 
-  function Item(definitions, repo) {
+  function Equipment(definitions, repo) {
     var meta = definitions.items[repo.itemHash];
 
     this.id = repo.itemHash;
@@ -25,8 +25,14 @@ define(['models/bucket'], function(Bucket) {
 
     this._definitions = definitions;
 
-    this._fillBaseStats(repo.stats);
-    this._fillPrimaryStat(meta.primaryBaseStat);
+    if(repo.baseStats) {
+      this._fillBaseStats(repo.baseStats);
+    }
+
+    if(meta.primaryBaseStat) {
+      this._fillPrimaryStat(meta.primaryBaseStat);
+    }
+
     this._fillTalentGrid(
       repo.nodes,
       definitions.talentGrids[meta.talentGridHash]
@@ -35,7 +41,7 @@ define(['models/bucket'], function(Bucket) {
     delete this._definitions;
   }
 
-  Item.prototype._fillBaseStats = function(stats) {
+  Equipment.prototype._fillBaseStats = function(stats) {
     stats.forEach(function(stat) {
       var meta = this._definitions.stats[stat.statHash];
 
@@ -43,7 +49,7 @@ define(['models/bucket'], function(Bucket) {
     }, this);
   };
 
-  Item.prototype._fillPrimaryStat = function(stat) {
+  Equipment.prototype._fillPrimaryStat = function(stat) {
     var meta = this._definitions.stats[stat.statHash];
 
     this.primaryStatId = meta.statIdentifier;
@@ -51,7 +57,7 @@ define(['models/bucket'], function(Bucket) {
     this.stats[this.primaryStatId] = createStat(stat, meta);
   };
 
-  Item.prototype._fillTalentGrid = function(itemNodes, talentGrid) {
+  Equipment.prototype._fillTalentGrid = function(itemNodes, talentGrid) {
     itemNodes.map(function(node, idx) {
       // The talentGrid maps 1:1 to an
       // item's "nodes"; Thanks for the confusing
@@ -104,5 +110,5 @@ define(['models/bucket'], function(Bucket) {
     });
   }
 
-  return Item;
+  return Equipment;
 });
