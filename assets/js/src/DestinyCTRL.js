@@ -36,6 +36,8 @@ define(['common/bungie'], function(Bungie) {
           weapons.primary.forEach(function(weapon) {
             var $weapon = $('<li />');
             var $icon = $('<img />')
+              .width(48)
+              .height(48)
               .attr('src', weapon.icon);
 
             $weapon.append($icon);
@@ -46,6 +48,8 @@ define(['common/bungie'], function(Bungie) {
           weapons.special.forEach(function(weapon) {
             var $weapon = $('<li />');
             var $icon = $('<img />')
+              .width(48)
+              .height(48)
               .attr('src', weapon.icon);
 
             $weapon.append($icon);
@@ -56,6 +60,8 @@ define(['common/bungie'], function(Bungie) {
           weapons.heavy.forEach(function(weapon) {
             var $weapon = $('<li />');
             var $icon = $('<img />')
+              .width(48)
+              .height(48)
               .attr('src', weapon.icon);
 
             $weapon.append($icon);
