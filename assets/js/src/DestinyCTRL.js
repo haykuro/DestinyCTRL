@@ -25,7 +25,8 @@ define(['common/bungie'], function(Bungie) {
           };
 
           var $weaponsCont = $('<div />');
-          var $weaponsTitle = $('<h1 />').text(weaponBucket.name);
+          var $weaponsTitle = $('<h1 />').text(weaponBucket.name +
+            ' (' + weaponBucket.items.length + '/' + weaponBucket.maxItems + ')');
           var $weaponsDesc = $('<p />').text(weaponBucket.description);
           var $weaponsList = $('<ul />');
           var $primaryWeapons = $('<li class="clear"><strong>Primary</strong><br /></li>');

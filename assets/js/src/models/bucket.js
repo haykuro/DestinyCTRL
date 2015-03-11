@@ -8,6 +8,7 @@ define(['models/item', 'models/equipment'], function(Item, Equipment) {
     this.order = bucketMeta.bucketOrder;
     this.description = bucketMeta.bucketDescription;
     this.items = [];
+    this.maxItems = bucketMeta.itemCount;
 
     for(var idx in repo.items) {
       var item = repo.items[idx];
