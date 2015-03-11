@@ -15,7 +15,7 @@
   ],
   out : 'assets/js/dist/main.js',
   wrap : true,
-  optimize : 'uglify2',
+  optimize : 'none',
   generateSourceMaps : true,
   preserveLicenseComments : false
 }
