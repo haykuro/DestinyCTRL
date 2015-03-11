@@ -13,8 +13,6 @@ define(function() {
 
     this.id = repo.itemHash;
     this.name = meta.itemName;
-    this.type = meta.itemType;
-    this.typeName = meta.itemTypeName;
     this.level = repo.itemLevel;
     this.description = meta.itemDescription;
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
@@ -23,7 +21,11 @@ define(function() {
     this.talentGrid = [];
     this.tier = { type : meta.tierType, name : meta.tierTypeName };
 
-    console.log(meta);
+    this.type = {
+      type : meta.itemType,
+      typeName : meta.itemTypeName,
+      bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
+    };
 
     this._definitions = definitions;
 
@@ -44,6 +46,71 @@ define(function() {
 
     delete this._definitions;
   }
+
+  Equipment.prototype.isArmor = function() {
+    return this.isHeadArmor() ||
+      this.isChestArmor() ||
+      this.isArmsArmor() ||
+      this.isLegsArmor();
+  };
+
+  Equipment.prototype.isWeapon = function() {
+    return this.isPrimaryWeapon() ||
+      this.isSpecialWeapon() ||
+      this.isHeavyWeapon();
+  };
+
+  Equipment.prototype.isOther = function() {
+    return ! this.isWeapon() && ! this.isArmor();
+  };
+
+  Equipment.prototype.isHeadArmor = function() {
+    return this.type.bucket === 'BUCKET_HEAD';
+  };
+
+  Equipment.prototype.isChestArmor = function() {
+    return this.type.bucket === 'BUCKET_CHEST';
+  };
+
+  Equipment.prototype.isArmsArmor = function() {
+    return this.type.bucket === 'BUCKET_ARMS';
+  };
+
+  Equipment.prototype.isLegsArmor = function() {
+    return this.type.bucket === 'BUCKET_LEGS';
+  };
+
+  Equipment.prototype.isPrimaryWeapon = function() {
+    return this.type.bucket === 'BUCKET_PRIMARY_WEAPON';
+  };
+
+  Equipment.prototype.isSpecialWeapon = function() {
+    return this.type.bucket === 'BUCKET_SPECIAL_WEAPON';
+  };
+
+  Equipment.prototype.isHeavyWeapon = function() {
+    return this.type.bucket === 'BUCKET_HEAVY_WEAPON';
+  };
+
+  Equipment.prototype.isShader = function() {
+    return this.type.bucket === 'BUCKET_SHADER';
+  };
+
+  Equipment.prototype.isEmblem = function() {
+    return this.type.bucket === 'BUCKET_EMBLEM';
+  };
+
+  Equipment.prototype.isClassItem = function() {
+    return this.type.bucket === 'BUCKET_CLASS_ITEMS';
+  };
+
+  Equipment.prototype.isVehicle = function() {
+    return this.type.bucket === 'BUCKET_VEHICLE';
+  };
+
+  Equipment.prototype.isShip = function() {
+    return this.type.bucket === 'BUCKET_SHIP';
+  };
 
   Equipment.prototype._fillBaseStats = function(stats) {
     stats.forEach(function(stat) {
@@ -112,7 +179,7 @@ define(function() {
         return a.row - b.row;
       });
     });
-  }
+  };
 
   return Equipment;
 });
