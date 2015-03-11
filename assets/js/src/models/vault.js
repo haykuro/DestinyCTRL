@@ -1,10 +1,10 @@
 define(['models/bucket'], function(Bucket) {
   function Vault(definitions, repo) {
-    this.buckets = [];
-
-    for(var idx in repo.buckets) {
-      this.buckets.push(new Bucket(definitions, repo.buckets[idx]));
-    }
+    this.buckets = repo.buckets.map(function(bucket) {
+      return new Bucket(definitions, bucket);
+    }).sort(function(a, b) {
+      return a.order - b.order;
+    });
   }
 
   return Vault;
