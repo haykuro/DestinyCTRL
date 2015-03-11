@@ -18,9 +18,9 @@ define(['common/utils'], function(Util) {
 
         API.request.apply(_self, _args)
           .then(resolve)
-          .catch(reject)
-          .then(_deleteCSRF);
-      })
+          .then(_deleteCSRF)
+          .catch(reject);
+      }).catch(reject);
     });
   };
 
