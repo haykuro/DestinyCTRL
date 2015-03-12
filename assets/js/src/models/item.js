@@ -7,17 +7,20 @@ define(function() {
     this.description = meta.itemDescription;
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stackSize = repo.stackSize;
-    this.type = meta.itemType;
-    this.typeName = meta.itemTypeName;
     this.tier = { type : meta.tierType, name : meta.tierName };
+    this.type = {
+      metaType : meta.itemType,
+      metaTypeName : meta.itemTypeName,
+      bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
+    };
   }
 
   Item.prototype.isMaterial = function() {
-    return this.type === 0;
+    return this.type.bucket === 'BUCKET_MATERIALS';
   };
 
   Item.prototype.isConsumable = function() {
-    return this.type === 9;
+    return this.type.bucket === 'BUCKET_CONSUMABLES';
   };
 
   return Item;
