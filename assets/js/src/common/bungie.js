@@ -75,10 +75,9 @@ define(['common/utils', 'common/api', 'models/account'], function(Util, API, Acc
             populate : true
           }, function(windows) {
             windows.forEach(function(_window) {
-              var isPopup = _window.type === 'popup';
-              var isDCTRL = _window.tabs[0].url.indexOf('#____destinyCTRL') > -1;
-
-              if(isPopup && isDCTRL) {
+              if(_window.type === 'popup' &&
+                _window.tabs[0].url.indexOf('#____destinyCTRL') > -1)
+              {
                 chrome.windows.remove(_window.id);
               }
             });
