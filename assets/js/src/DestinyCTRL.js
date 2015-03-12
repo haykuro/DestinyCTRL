@@ -101,19 +101,18 @@ define(['common/bungie', 'common/utils'], function(Bungie, Util) {
           top : Math.abs((wH / 2) - (sH / 2)) | 0,
           left : Math.abs((wW / 2) - (sW / 2)) | 0
         }, function(_window) {
-          var check = setInterval(function() {
+          var authCheck = setInterval(function() {
             Bungie.authorize().then(function() {
-                clearInterval(check);
-
+                clearInterval(authCheck);
                 chrome.windows.remove(_window.id);
-
                 window.location.reload();
               }).catch(function(err) {
                 if(err.ErrorCode !== 99) {
+                  clearInterval(authCheck);
                   alert('Something went wrong, refesh the page.');
                 }
               });
-          }, 2000);
+          }, 1000);
         });
       };
 
