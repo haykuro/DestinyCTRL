@@ -12,8 +12,12 @@
     'models/vault',
     'models/bucket',
     'models/item',
-    'models/equipment'
+    'models/equipment',
+    'modules/vault',
   ],
+  paths : {
+    mithril : 'vendor/mithril'
+  },
   out : 'assets/js/dist/main.js',
   wrap : true,
   optimize : 'none',
