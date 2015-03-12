@@ -7,6 +7,7 @@
     'common/api',
     'common/bungie',
     'common/utils',
+    'common/authorizer',
     'models/account',
     'models/character',
     'models/vault',

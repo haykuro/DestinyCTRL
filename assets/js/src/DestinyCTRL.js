@@ -4,10 +4,10 @@ define(['common/bungie', 'common/utils'], function(Bungie, Util) {
   DestinyCTRL.initialize = function() {
     var _self = this;
 
-    Bungie.authorize().then(function() {
+    Bungie.authorize('psn').then(function() {
       require(['modules/vault']);
     }).catch(function(err) {
-      console.error(err.Message);
+      console.error(err);
     });
   };
 
