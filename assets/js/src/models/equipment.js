@@ -22,8 +22,8 @@ define(function() {
     this.tier = { type : meta.tierType, name : meta.tierTypeName };
 
     this.type = {
-      type : meta.itemType,
-      typeName : meta.itemTypeName,
+      metaType : meta.itemType,
+      metaTypeName : meta.itemTypeName,
       bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
     };
 
