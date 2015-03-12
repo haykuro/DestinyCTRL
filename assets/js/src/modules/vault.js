@@ -31,7 +31,8 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
             { name : 'Head [%total%]', filter : 'HEAD', count : 0 },
             { name : 'Chest [%total%]', filter : 'CHEST', count : 0 },
             { name : 'Arms [%total%]', filter : 'ARMS', count : 0 },
-            { name : 'Legs [%total%]', filter : 'LEGS', count : 0 }
+            { name : 'Legs [%total%]', filter : 'LEGS', count : 0 },
+            { name : 'Class [%total%]', filter : 'CLASS_ITEMS', count : 0 },
           ]
         },
         {
@@ -42,7 +43,6 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
             { name : 'All [%total%]', filter : 'ALL', count : 0 },
             { name : 'Materials [%total%]', filter : 'MATERIALS', count : 0 },
             { name : 'Consumables [%total%]', filter : 'CONSUMABLES', count : 0 },
-            { name : 'Class [%total%]', filter : 'CLASS_ITEMS', count : 0 },
             { name : 'Shaders [%total%]', filter : 'SHADER', count : 0 },
             { name : 'Emblems [%total%]', filter : 'EMBLEM', count : 0 },
             { name : 'Vehicles [%total%]', filter : 'VEHICLES', count : 0 },
