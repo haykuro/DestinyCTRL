@@ -119,12 +119,7 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
       });
 
       var subTypes = vm.getSubTypes().map(function(type) {
-        return m('option', {
-          value : type.filter,
-          onchange : function() {
-            vm.filter.subType = this.value;
-          }
-        }, type.name);
+        return m('option', { value : type.filter }, type.name);
       });
 
       return [
@@ -135,7 +130,7 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
             vm.filter.subType = false;
           }
         }, types),
-        m('select#vault-subtype', {
+        m('select#vault-subType', {
           selectedindex : 0,
           disabled : ! subTypes.length,
           onchange : function() {
