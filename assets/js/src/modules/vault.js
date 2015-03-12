@@ -6,46 +6,82 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
       this.filter = { type : 'ALL', subType : false };
       this.types = [
         {
-          name : 'All',
+          name : 'All [%total%]',
           filter : 'ALL',
+          count : 0,
           types : []
         },
         {
-          name : 'Weapons',
+          name : 'Weapons [%total%]',
           filter : 'WEAPONS',
+          count : 0,
           types : [
-            { name : 'All', filter : 'ALL' },
-            { name : 'Primary', filter : 'PRIMARY_WEAPON' },
-            { name : 'Special', filter : 'SPECIAL_WEAPON' },
-            { name : 'Heavy', filter : 'HEAVY_WEAPON' }
+            { name : 'All [%total%]', filter : 'ALL', count : 0 },
+            { name : 'Primary [%total%]', filter : 'PRIMARY_WEAPON', count : 0 },
+            { name : 'Special [%total%]', filter : 'SPECIAL_WEAPON', count : 0 },
+            { name : 'Heavy [%total%]', filter : 'HEAVY_WEAPON', count : 0 }
           ]
         },
         {
-          name : 'Armor',
+          name : 'Armor [%total%]',
           filter : 'ARMOR',
+          count : 0,
           types : [
-            { name : 'All', filter : 'ALL' },
-            { name : 'Head', filter : 'HEAD' },
-            { name : 'Chest', filter : 'CHEST' },
-            { name : 'Arms', filter : 'ARMS' },
-            { name : 'Legs', filter : 'LEGS' }
+            { name : 'All [%total%]', filter : 'ALL', count : 0 },
+            { name : 'Head [%total%]', filter : 'HEAD', count : 0 },
+            { name : 'Chest [%total%]', filter : 'CHEST', count : 0 },
+            { name : 'Arms [%total%]', filter : 'ARMS', count : 0 },
+            { name : 'Legs [%total%]', filter : 'LEGS', count : 0 }
           ]
         },
         {
-          name : 'General',
+          name : 'General [%total%]',
           filter : 'GENERAL',
+          count : 0,
           types : [
-            { name : 'All', filter : 'ALL' },
-            { name : 'Materials', filter : 'MATERIALS' },
-            { name : 'Consumables', filter : 'CONSUMABLES' },
-            { name : 'Class', filter : 'CLASS_ITEMS' },
-            { name : 'Shaders', filter : 'SHADER' },
-            { name : 'Emblems', filter : 'EMBLEM' },
-            { name : 'Vehicles', filter : 'VEHICLES' },
-            { name : 'Ships', filter : 'SHIPS' }
+            { name : 'All [%total%]', filter : 'ALL', count : 0 },
+            { name : 'Materials [%total%]', filter : 'MATERIALS', count : 0 },
+            { name : 'Consumables [%total%]', filter : 'CONSUMABLES', count : 0 },
+            { name : 'Class [%total%]', filter : 'CLASS_ITEMS', count : 0 },
+            { name : 'Shaders [%total%]', filter : 'SHADER', count : 0 },
+            { name : 'Emblems [%total%]', filter : 'EMBLEM', count : 0 },
+            { name : 'Vehicles [%total%]', filter : 'VEHICLES', count : 0 },
+            { name : 'Ships [%total%]', filter : 'SHIPS', count : 0 }
           ]
         }
       ];
+
+      this.sync();
+    },
+
+    sync : function() {
+      var _self = this;
+      var types = vm.getTypes();
+
+      vm.getTypes().forEach(function(type, idx) {
+        if(type.filter === 'ALL') {
+          allTypeIdx = idx;
+        }
+
+        if(type.types.length) {
+          type.count = 0;
+
+          type.types.forEach(function(subType) {
+            var items = _self.getItems(type.filter, subType.filter);
+
+            subType.count = items.length
+            subType.name = subType.name.replace(/%total%/, subType.count);
+
+            if(subType.filter != 'ALL') {
+              type.count += subType.count;
+            }
+          });
+        } else {
+          type.count = _self.getItems().length;
+        }
+
+        type.name = type.name.replace(/%total%/, type.count);
+      });
     },
 
     getItems : function(type, subType) {
@@ -77,6 +113,20 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
 
         return items;
       }, []);
+    },
+
+    getTypeByFilter : function(filter) {
+      var _type;
+
+      this.getTypes().some(function(type) {
+        if(type.filter === filter) {
+          _type = type;
+
+          return true;
+        }
+      });
+
+      return _type;
     },
 
     getTypes : function() {
@@ -115,11 +165,15 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
 
     view : function() {
       var types = vm.getTypes().map(function(type) {
-        return m('option', { value : type.filter }, type.name);
+        return type.count ?
+          m('option', { value : type.filter }, type.name) :
+          undefined;
       });
 
       var subTypes = vm.getSubTypes().map(function(type) {
-        return m('option', { value : type.filter }, type.name);
+        return type.count ?
+          m('option', { value : type.filter }, type.name) :
+          undefined;
       });
 
       return [
