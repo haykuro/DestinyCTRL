@@ -37,7 +37,9 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
             { name : 'Emblems', filter : 'BUCKET_EMBLEMS', bucket : 'general' },
             { name : 'Class', filter : 'BUCKET_CLASS_ITEMS', bucket : 'general' },
             { name : 'Vehicles', filter : 'BUCKET_VEHICLES', bucket : 'general' },
-            { name : 'Ships', filter : 'BUCKET_SHIPS', bucket : 'general' }
+            { name : 'Ships', filter : 'BUCKET_SHIPS', bucket : 'general' },
+            { name : 'Materials', filter : 'BUCKET_MATERIALS', bucket : 'general' },
+            { name : 'Consumables', filter : 'BUCKET_CONSUMABLES', bucket : 'general' },
           ]
         }
       };
