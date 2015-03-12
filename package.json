@@ -1,8 +1,9 @@
 {
   "devDependencies": {
     "gulp": "^3.8.11",
+    "gulp-ruby-sass": "~1.0.0-alpha",
     "gulp-shell": "^0.3.0",
     "gulp-watch": "^4.1.1",
-    "gulp-ruby-sass": "~1.0.0-alpha"
+    "requirejs": "^2.1.16"
   }
 }

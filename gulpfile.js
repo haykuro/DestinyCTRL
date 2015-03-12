@@ -3,11 +3,14 @@ var shell = require('gulp-shell');
 var watch = require('gulp-watch');
 var sass = require('gulp-ruby-sass');
 
-gulp.task('build', shell.task(['r.js -o build.js']));
+gulp.task('build', shell.task([
+  './node_modules/.bin/r.js -o build.js'
+]));
 
 gulp.task('sass', function () {
-    return sass('assets/scss', { style: 'compressed' })
-           .pipe(gulp.dest('assets/css'));
+    return sass('assets/scss', {
+      style: 'compressed'
+    }).pipe(gulp.dest('assets/css'));
 });
 
 gulp.task('watch', function() {
