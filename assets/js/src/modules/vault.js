@@ -115,20 +115,6 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
       }, []);
     },
 
-    getTypeByFilter : function(filter) {
-      var _type;
-
-      this.getTypes().some(function(type) {
-        if(type.filter === filter) {
-          _type = type;
-
-          return true;
-        }
-      });
-
-      return _type;
-    },
-
     getTypes : function() {
       return this.types;
     },
