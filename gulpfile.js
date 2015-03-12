@@ -21,6 +21,11 @@ gulp.task('watch', function() {
       gulp.start('build');
     }
   });
-})
+
+  watch('assets/scss', function () {
+      gulp.start('sass');
+  });
+
+});
 
 gulp.task('default', ['build']);
