@@ -14,12 +14,11 @@
     "default_icon": "assets/icons/icon19.png"
   },
   "background": {
-    "scripts":[
-      "assets/js/dist/main.js"
-    ]
+    "scripts": ["background.js"]
   },
   "permissions": [
     "cookies",
-    "https://www.bungie.net/*"
+    "tabs",
+    "*://*.bungie.net/*"
   ]
 }
