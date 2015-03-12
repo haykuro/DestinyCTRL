@@ -1,4 +1,4 @@
-define(['mithril', 'common/bungie'], function(m, Bungie) {
+define(['mithril', 'common/bungie', 'opentip'], function(m, Bungie, Opentip) {
   var vm = {
     init : function(vault) {
       this.title = 'Vault';

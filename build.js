@@ -17,7 +17,11 @@
     'modules/vault',
   ],
   paths : {
-    mithril : 'vendor/mithril'
+    mithril : 'vendor/mithril',
+    opentip : 'vendor/opentip'
+  },
+  shim : {
+    opentip : { exports : 'Opentip' }
   },
   out : 'assets/js/dist/main.js',
   wrap : true,
