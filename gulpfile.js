@@ -8,7 +8,7 @@ gulp.task('build', shell.task([
 ]));
 
 gulp.task('sass', function () {
-    return sass('assets/scss', {
+    return sass('assets/scss/main.scss', {
       style: 'compressed'
     }).pipe(gulp.dest('assets/css'));
 });
