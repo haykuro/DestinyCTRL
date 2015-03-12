@@ -171,6 +171,9 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
         m('select#vault-subType', {
           selectedindex : 0,
           disabled : ! subTypes.length,
+          style : {
+            display : ! subTypes.length ? 'none' : ''
+          },
           onchange : function() {
             vm.filter.subType = this.value;
           }
