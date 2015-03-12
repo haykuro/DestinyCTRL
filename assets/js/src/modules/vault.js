@@ -2,55 +2,99 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
   var vm = {
     init : function(vault) {
       this.title = 'Vault';
-
-      this.buckets = {
-        weapons : vault.getWeapons(),
-        armor : vault.getArmor(),
-        general : vault.getGeneral()
-      };
-
-      this.groups = {
-        weapons : {
-          title : this.bucket('weapons').name,
-          description : this.bucket('weapons').description,
-          categories : [
-            { name : 'Primary', filter : 'PRIMARY_WEAPON', bucket : 'weapons' },
-            { name : 'Special', filter : 'SPECIAL_WEAPON', bucket : 'weapons' },
-            { name : 'Heavy', filter : 'HEAVY_WEAPON', bucket : 'weapons' }
+      this.vault = vault;
+      this.filter = { type : 'ALL', subType : false };
+      this.types = [
+        {
+          name : 'All',
+          filter : 'ALL',
+          types : []
+        },
+        {
+          name : 'Weapons',
+          filter : 'WEAPONS',
+          types : [
+            { name : 'All', filter : 'ALL' },
+            { name : 'Primary', filter : 'PRIMARY_WEAPON' },
+            { name : 'Special', filter : 'SPECIAL_WEAPON' },
+            { name : 'Heavy', filter : 'HEAVY_WEAPON' }
           ]
         },
-        armor : {
-          title : this.bucket('armor').name,
-          description : this.bucket('armor').description,
-          categories : [
-            { name : 'Head', filter : 'HEAD', bucket : 'armor' },
-            { name : 'Chest', filter : 'CHEST', bucket : 'armor' },
-            { name : 'Arms', filter : 'ARMS', bucket : 'armor' },
-            { name : 'Legs', filter : 'LEGS', bucket : 'armor' }
+        {
+          name : 'Armor',
+          filter : 'ARMOR',
+          types : [
+            { name : 'All', filter : 'ALL' },
+            { name : 'Head', filter : 'HEAD' },
+            { name : 'Chest', filter : 'CHEST' },
+            { name : 'Arms', filter : 'ARMS' },
+            { name : 'Legs', filter : 'LEGS' }
           ]
         },
-        other : {
-          title : this.bucket('general').name,
-          description : this.bucket('general').description,
-          categories : [
-            { name : 'Shaders', filter : 'SHADER', bucket : 'general' },
-            { name : 'Emblems', filter : 'EMBLEMS', bucket : 'general' },
-            { name : 'Class', filter : 'CLASS_ITEMS', bucket : 'general' },
-            { name : 'Vehicles', filter : 'VEHICLES', bucket : 'general' },
-            { name : 'Ships', filter : 'SHIPS', bucket : 'general' },
-            { name : 'Materials', filter : 'MATERIALS', bucket : 'general' },
-            { name : 'Consumables', filter : 'CONSUMABLES', bucket : 'general' },
+        {
+          name : 'General',
+          filter : 'GENERAL',
+          types : [
+            { name : 'All', filter : 'ALL' },
+            { name : 'Materials', filter : 'MATERIALS' },
+            { name : 'Consumables', filter : 'CONSUMABLES' },
+            { name : 'Class', filter : 'CLASS_ITEMS' },
+            { name : 'Shaders', filter : 'SHADER' },
+            { name : 'Emblems', filter : 'EMBLEM' },
+            { name : 'Vehicles', filter : 'VEHICLES' },
+            { name : 'Ships', filter : 'SHIPS' }
           ]
         }
-      };
+      ];
     },
 
-    bucket : function(bucket) {
-      return this.buckets[bucket] || {};
+    getItems : function(type, subType) {
+      var buckets;
+
+      switch(type) {
+        case 'WEAPONS':
+          buckets = [vm.vault.getWeapons()];
+          break;
+        case 'ARMOR':
+          buckets = [vm.vault.getArmor()];
+          break;
+        case 'GENERAL':
+          buckets = [vm.vault.getGeneral()];
+          break;
+        default:
+          buckets = vm.vault.getAll();
+          break;
+      }
+
+      return buckets.reduce(function(memo, bucket) {
+        var items = memo.concat(bucket.getItems());
+
+        if(subType && subType != 'ALL') {
+          items = items.filter(function(item) {
+            return item.type.bucket === subType;
+          });
+        }
+
+        return items;
+      }, []);
     },
 
-    group : function(group) {
-      return this.groups[group] || [];
+    getTypes : function() {
+      return this.types;
+    },
+
+    getSubTypes : function() {
+      var _self = this;
+      var subTypes = [];
+
+      this.types.some(function(type) {
+        if(_self.filter.type === type.filter) {
+          subTypes = type.types;
+          return true;
+        }
+      });
+
+      return subTypes;
     }
   };
 
@@ -69,39 +113,45 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
       }
     },
 
-    view : function(ctrl) {
-      var createGroup = function(cat) {
-        var group = vm.group(cat);
+    view : function() {
+      var types = vm.getTypes().map(function(type) {
+        return m('option', { value : type.filter }, type.name);
+      });
 
-        return [
-          m('h2', group.title),
-          m('p', group.description),
-          group.categories.map(function(cat) {
-            return m('li.clear', [
-              m('h3', cat.name),
-              m('ul', vm.bucket(cat.bucket)
-                .getItems(cat.filter).map(function(item) {
-                  return m('li', [
-                    m('img', {
-                      src : item.icon,
-                      width : 44,
-                      height : 44
-                    })
-                  ]);
-                })
-              )
-            ]);
-          })
-        ];
-      };
+      var subTypes = vm.getSubTypes().map(function(type) {
+        return m('option', {
+          value : type.filter,
+          onchange : function() {
+            vm.filter.subType = this.value;
+          }
+        }, type.name);
+      });
 
       return [
         m("h1", vm.title),
-        m('div#vault-weapons', [
-          m('ul', createGroup('weapons')),
-          m('ul', createGroup('armor')),
-          m('ul', createGroup('other'))
-        ])
+        m('select#vault-type', {
+          onchange : function() {
+            vm.filter.type = this.value;
+            vm.filter.subType = false;
+          }
+        }, types),
+        m('select#vault-subtype', {
+          selectedindex : 0,
+          disabled : ! subTypes.length,
+          onchange : function() {
+            vm.filter.subType = this.value;
+          }
+        }, subTypes),
+        m('ul', vm.getItems(
+          vm.filter.type,
+          vm.filter.subType
+        ).map(function(item) {
+          return m('li', m('img', {
+            src : item.icon,
+            width : 44,
+            height : 44
+          }));
+        }))
       ];
     }
   });

@@ -1,29 +1,36 @@
-//Main styles for Destiny Control
+//Main styles for DestinyCTRL
 
 .lead {
-    font-size: 32px;
-    font-weight: bold;
+  font-size: 32px;
+  font-weight: bold;
 }
 
-//Vault
-#vault ul {
-    list-style: none;
-    padding: 0;
-}
 .clear:before,
 .clear:after {
     content: " ";
     display: table;
 }
+
 .clear:after {
     clear: both;
 }
-#vault ul li li {
-    float: left;
-    margin-top: 1px;
-    margin-left: 1px;
-    border: 1px solid red;
-}
-#vault ul li li img {
-    padding: 1px;
+
+//Vault
+#vault {
+  ul {
+    list-style: none;
+    padding: 0;
+    width : 300px;
+
+    li {
+      float: left;
+      margin-top: 1px;
+      margin-left: 1px;
+      border: 1px solid red;
+    }
+
+    img {
+      padding: 1px;
+    }
+  }
 }
