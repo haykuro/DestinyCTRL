@@ -12,15 +12,16 @@ define(function() {
       metaType : meta.itemType,
       metaTypeName : meta.itemTypeName,
       bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
+        .replace(/^BUCKET_/, '')
     };
   }
 
   Item.prototype.isMaterial = function() {
-    return this.type.bucket === 'BUCKET_MATERIALS';
+    return this.type.bucket === 'MATERIALS';
   };
 
   Item.prototype.isConsumable = function() {
-    return this.type.bucket === 'BUCKET_CONSUMABLES';
+    return this.type.bucket === 'CONSUMABLES';
   };
 
   return Item;

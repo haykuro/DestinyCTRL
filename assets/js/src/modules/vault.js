@@ -14,32 +14,32 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
           title : this.bucket('weapons').name,
           description : this.bucket('weapons').description,
           categories : [
-            { name : 'Primary', filter : 'BUCKET_PRIMARY_WEAPON', bucket : 'weapons' },
-            { name : 'Special', filter : 'BUCKET_SPECIAL_WEAPON', bucket : 'weapons' },
-            { name : 'Heavy', filter : 'BUCKET_HEAVY_WEAPON', bucket : 'weapons' }
+            { name : 'Primary', filter : 'PRIMARY_WEAPON', bucket : 'weapons' },
+            { name : 'Special', filter : 'SPECIAL_WEAPON', bucket : 'weapons' },
+            { name : 'Heavy', filter : 'HEAVY_WEAPON', bucket : 'weapons' }
           ]
         },
         armor : {
           title : this.bucket('armor').name,
           description : this.bucket('armor').description,
           categories : [
-            { name : 'Head', filter : 'BUCKET_HEAD', bucket : 'armor' },
-            { name : 'Chest', filter : 'BUCKET_CHEST', bucket : 'armor' },
-            { name : 'Arms', filter : 'BUCKET_ARMS', bucket : 'armor' },
-            { name : 'Legs', filter : 'BUCKET_LEGS', bucket : 'armor' }
+            { name : 'Head', filter : 'HEAD', bucket : 'armor' },
+            { name : 'Chest', filter : 'CHEST', bucket : 'armor' },
+            { name : 'Arms', filter : 'ARMS', bucket : 'armor' },
+            { name : 'Legs', filter : 'LEGS', bucket : 'armor' }
           ]
         },
         other : {
           title : this.bucket('general').name,
           description : this.bucket('general').description,
           categories : [
-            { name : 'Shaders', filter : 'BUCKET_SHADER', bucket : 'general' },
-            { name : 'Emblems', filter : 'BUCKET_EMBLEMS', bucket : 'general' },
-            { name : 'Class', filter : 'BUCKET_CLASS_ITEMS', bucket : 'general' },
-            { name : 'Vehicles', filter : 'BUCKET_VEHICLES', bucket : 'general' },
-            { name : 'Ships', filter : 'BUCKET_SHIPS', bucket : 'general' },
-            { name : 'Materials', filter : 'BUCKET_MATERIALS', bucket : 'general' },
-            { name : 'Consumables', filter : 'BUCKET_CONSUMABLES', bucket : 'general' },
+            { name : 'Shaders', filter : 'SHADER', bucket : 'general' },
+            { name : 'Emblems', filter : 'EMBLEMS', bucket : 'general' },
+            { name : 'Class', filter : 'CLASS_ITEMS', bucket : 'general' },
+            { name : 'Vehicles', filter : 'VEHICLES', bucket : 'general' },
+            { name : 'Ships', filter : 'SHIPS', bucket : 'general' },
+            { name : 'Materials', filter : 'MATERIALS', bucket : 'general' },
+            { name : 'Consumables', filter : 'CONSUMABLES', bucket : 'general' },
           ]
         }
       };

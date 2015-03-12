@@ -1,4 +1,4 @@
-define(function() {
+define(['common/utils', 'models/item'], function(Util, Item) {
   function createStat(stat, meta) {
     return {
       name : meta.statName,
@@ -9,32 +9,24 @@ define(function() {
   }
 
   function Equipment(definitions, repo) {
+    // Inherit the instance properties from
+    // the Item model
+
+    Item.apply(this, arguments);
+
     var meta = definitions.items[repo.itemHash];
 
-    this.id = repo.itemHash;
-    this.name = meta.itemName;
     this.level = repo.itemLevel;
-    this.description = meta.itemDescription;
-    this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stats = {};
     this.primaryStatId = null;
     this.talentGrid = [];
-    this.tier = { type : meta.tierType, name : meta.tierTypeName };
-
-    this.type = {
-      metaType : meta.itemType,
-      metaTypeName : meta.itemTypeName,
-      bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
-    };
-
-    this._definitions = definitions;
 
     if(repo.baseStats) {
-      this._fillBaseStats(repo.baseStats);
+      this._fillBaseStats(definitions, repo.baseStats);
     }
 
     if(meta.primaryBaseStat) {
-      this._fillPrimaryStat(meta.primaryBaseStat);
+      this._fillPrimaryStat(definitions, meta.primaryBaseStat);
     }
 
     if(repo.nodes) {
@@ -43,9 +35,11 @@ define(function() {
         definitions.talentGrids[meta.talentGridHash]
       );
     }
-
-    delete this._definitions;
   }
+
+  // Inherit the methods from Item
+
+  Util.inheritClass(Equipment, Item);
 
   Equipment.prototype.isArmor = function() {
     return this.isHeadArmor() ||
@@ -65,63 +59,63 @@ define(function() {
   };
 
   Equipment.prototype.isHeadArmor = function() {
-    return this.type.bucket === 'BUCKET_HEAD';
+    return this.type.bucket === 'HEAD';
   };
 
   Equipment.prototype.isChestArmor = function() {
-    return this.type.bucket === 'BUCKET_CHEST';
+    return this.type.bucket === 'CHEST';
   };
 
   Equipment.prototype.isArmArmor = function() {
-    return this.type.bucket === 'BUCKET_ARMS';
+    return this.type.bucket === 'ARMS';
   };
 
   Equipment.prototype.isLegArmor = function() {
-    return this.type.bucket === 'BUCKET_LEGS';
+    return this.type.bucket === 'LEGS';
   };
 
   Equipment.prototype.isPrimaryWeapon = function() {
-    return this.type.bucket === 'BUCKET_PRIMARY_WEAPON';
+    return this.type.bucket === 'PRIMARY_WEAPON';
   };
 
   Equipment.prototype.isSpecialWeapon = function() {
-    return this.type.bucket === 'BUCKET_SPECIAL_WEAPON';
+    return this.type.bucket === 'SPECIAL_WEAPON';
   };
 
   Equipment.prototype.isHeavyWeapon = function() {
-    return this.type.bucket === 'BUCKET_HEAVY_WEAPON';
+    return this.type.bucket === 'HEAVY_WEAPON';
   };
 
   Equipment.prototype.isShader = function() {
-    return this.type.bucket === 'BUCKET_SHADER';
+    return this.type.bucket === 'SHADER';
   };
 
   Equipment.prototype.isEmblem = function() {
-    return this.type.bucket === 'BUCKET_EMBLEM';
+    return this.type.bucket === 'EMBLEM';
   };
 
   Equipment.prototype.isClassItem = function() {
-    return this.type.bucket === 'BUCKET_CLASS_ITEMS';
+    return this.type.bucket === 'CLASS_ITEMS';
   };
 
   Equipment.prototype.isVehicle = function() {
-    return this.type.bucket === 'BUCKET_VEHICLE';
+    return this.type.bucket === 'VEHICLE';
   };
 
   Equipment.prototype.isShip = function() {
-    return this.type.bucket === 'BUCKET_SHIP';
+    return this.type.bucket === 'SHIP';
   };
 
-  Equipment.prototype._fillBaseStats = function(stats) {
+  Equipment.prototype._fillBaseStats = function(definitions, stats) {
     stats.forEach(function(stat) {
-      var meta = this._definitions.stats[stat.statHash];
+      var meta = definitions.stats[stat.statHash];
 
       this.stats[meta.statIdentifier] = createStat(stat, meta);
     }, this);
   };
 
-  Equipment.prototype._fillPrimaryStat = function(stat) {
-    var meta = this._definitions.stats[stat.statHash];
+  Equipment.prototype._fillPrimaryStat = function(definitions, stat) {
+    var meta = definitions.stats[stat.statHash];
 
     this.primaryStatId = meta.statIdentifier;
 
