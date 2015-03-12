@@ -72,11 +72,11 @@ define(function() {
     return this.type.bucket === 'BUCKET_CHEST';
   };
 
-  Equipment.prototype.isArmsArmor = function() {
+  Equipment.prototype.isArmArmor = function() {
     return this.type.bucket === 'BUCKET_ARMS';
   };
 
-  Equipment.prototype.isLegsArmor = function() {
+  Equipment.prototype.isLegArmor = function() {
     return this.type.bucket === 'BUCKET_LEGS';
   };
 
