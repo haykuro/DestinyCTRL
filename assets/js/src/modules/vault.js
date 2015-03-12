@@ -64,8 +64,6 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
         }
 
         if(type.types.length) {
-          type.count = 0;
-
           type.types.forEach(function(subType) {
             var items = _self.getItems(type.filter, subType.filter);
 
