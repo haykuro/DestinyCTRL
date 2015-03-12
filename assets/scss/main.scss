@@ -5,9 +5,15 @@
 //Bootstrap
 @import "vendor/bootstrap/bootstrap";
 
-.lead {
-  font-size: 32px;
-  font-weight: bold;
+/*
+ * Components
+ */
+
+@import "components/sidebar";
+@import "components/content";
+
+body {
+    padding-top: 50px;
 }
 
 .clear:before,
