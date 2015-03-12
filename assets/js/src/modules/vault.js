@@ -3,49 +3,40 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
     init : function(vault) {
       this.title = 'Vault';
 
-      var weaponsBucket = vault.getWeapons();
+      this.buckets = {
+        weapons : vault.getWeapons(),
+        armor : vault.getArmor(),
+        general : vault.getGeneral()
+      };
 
-      this.primaryWeapons = weaponsBucket.getItems(function(item) {
-        return item.isPrimaryWeapon();
-      });
-
-      this.specialWeapons = weaponsBucket.getItems(function(item) {
-        return item.isSpecialWeapon();
-      });
-
-      this.heavyWeapons = weaponsBucket.getItems(function(item) {
-        return item.isHeavyWeapon();
-      });
-
-      var armorBucket = vault.getArmor();
-
-      this.headArmor = armorBucket.getItems(function(item) {
-        return item.isHeadArmor();
-      });
-
-      this.chestArmor = armorBucket.getItems(function(item) {
-        return item.isChestArmor();
-      });
-
-      this.armArmor = armorBucket.getItems(function(item) {
-        return item.isArmArmor();
-      });
-
-      this.legArmor = armorBucket.getItems(function(item) {
-        return item.isLegArmor();
-      });
+      this.groups = {
+        weapons : [
+          { name : 'Primary', filter : 'BUCKET_PRIMARY_WEAPON', bucket : 'weapons' },
+          { name : 'Special', filter : 'BUCKET_SPECIAL_WEAPON', bucket : 'weapons' },
+          { name : 'Heavy', filter : 'BUCKET_HEAVY_WEAPON', bucket : 'weapons' }
+        ],
+        armor : [
+          { name : 'Head', filter : 'BUCKET_HEAD', bucket : 'armor' },
+          { name : 'Chest', filter : 'BUCKET_CHEST', bucket : 'armor' },
+          { name : 'Arms', filter : 'BUCKET_ARMS', bucket : 'armor' },
+          { name : 'Legs', filter : 'BUCKET_LEGS', bucket : 'armor' }
+        ],
+        other : [
+          { name : 'Shaders', filter : 'BUCKET_SHADER', bucket : 'general' },
+          { name : 'Emblems', filter : 'BUCKET_EMBLEMS', bucket : 'general' },
+          { name : 'Class', filter : 'BUCKET_CLASS_ITEMS', bucket : 'general' },
+          { name : 'Vehicles', filter : 'BUCKET_VEHICLES', bucket : 'general' },
+          { name : 'Ships', filter : 'BUCKET_SHIPS', bucket : 'general' }
+        ]
+      };
     },
 
-    weapons : function() {
-      return this.vault.getWeapons();
+    bucket : function(bucket) {
+      return this.buckets[bucket] || {};
     },
 
-    armor : function() {
-      return this.vault.getArmor();
-    },
-
-    general : function() {
-      return this.vault.getGeneral();
+    group : function(group) {
+      return this.groups[group] || [];
     }
   };
 
@@ -65,55 +56,31 @@ define(['mithril', 'common/bungie'], function(m, Bungie) {
     },
 
     view : function(ctrl) {
-      var createItem = function(item) {
-        return m('li', [
-          m('img', {
-            src : item.icon,
-            width : 44,
-            height : 44
-          })
-        ]);
+      var createGroup = function(cat) {
+        return vm.group(cat).map(function(cat) {
+          return m('li.clear', [
+            m('h2', cat.name),
+            m('ul', vm.bucket(cat.bucket)
+              .getItems(cat.filter).map(function(item) {
+                return m('li', [
+                  m('img', {
+                    src : item.icon,
+                    width : 44,
+                    height : 44
+                  })
+                ]);
+              })
+            )
+          ]);
+        });
       };
 
       return [
         m("h1", vm.title),
         m('div#vault-weapons', [
-          m('h1', ''),
-          m('ul', [
-            m('li.clear', [
-              m('strong', 'Primary Weapons'),
-              m('ul', vm.primaryWeapons.map(createItem))
-            ]),
-            m('li.clear', [
-              m('strong', 'Special Weapons'),
-              m('ul', vm.specialWeapons.map(createItem))
-            ]),
-            m('li.clear', [
-              m('strong', 'Heavy Weapons'),
-              m('ul', vm.heavyWeapons.map(createItem))
-            ])
-          ])
-        ]),
-        m('div#vault-armor', [
-          m('h1', ''),
-          m('ul', [
-            m('li.clear', [
-              m('strong', 'Head Armor'),
-              m('ul', vm.headArmor.map(createItem))
-            ]),
-            m('li.clear', [
-              m('strong', 'Chest Armor'),
-              m('ul', vm.chestArmor.map(createItem))
-            ]),
-            m('li.clear', [
-              m('strong', 'Arm Armor'),
-              m('ul', vm.armArmor.map(createItem))
-            ]),
-            m('li.clear', [
-              m('strong', 'Leg Armor'),
-              m('ul', vm.legArmor.map(createItem))
-            ])
-          ])
+          m('ul', createGroup('weapons')),
+          m('ul', createGroup('armor')),
+          m('ul', createGroup('other'))
         ])
       ];
     }
