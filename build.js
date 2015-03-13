@@ -18,7 +18,6 @@
     'models/bucket',
     'models/item',
     'models/equipment',
-    'modules/vault',
-    'modules/character'
+    'modules/vault'
   ]
 }

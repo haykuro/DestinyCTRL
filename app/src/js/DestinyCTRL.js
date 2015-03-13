@@ -3,10 +3,9 @@ require(['common/bungie', 'common/utils'], function(Bungie, Util) {
 
   Bungie.authorize('psn').then(function() {
     require([
-      'modules/vault',
-      'modules/character'
-    ], function(Vault, Character) {
-      new Character().attach('#character');
+      'modules/vault'
+    ], function(Vault) {
+      //
     });
   }).catch(function(err) {
     console.error(err);
