@@ -2,7 +2,7 @@
   'use strict';
 
   chrome.browserAction.onClicked.addListener(function() {
-    var index = chrome.extension.getURL('index.html');
+    var index = chrome.extension.getURL('app/index.html');
 
     try {
       chrome.tabs.query({ url : index }, function(tabs) {

@@ -1,10 +1,9 @@
 define(
   [
     'common/bungie',
-    'modules/item',
-    'mithril'
+    'modules/item'
   ],
-  function(Bungie, Item, m) {
+  function(Bungie, Item) {
     var vm = {
       init : function(vault) {
         this.title = 'Vault';
