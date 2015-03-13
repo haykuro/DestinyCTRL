@@ -1,9 +1,10 @@
 define(
   [
     'common/bungie',
+    'modules/item',
     'mithril'
   ],
-  function(Bungie, m) {
+  function(Bungie, Item, m) {
     var vm = {
       init : function(vault) {
         this.title = 'Vault';
@@ -115,7 +116,9 @@ define(
           }
 
           return items;
-        }, []);
+        }, []).map(function(item) {
+          return new Item(item, true);
+        });
       },
 
       getTypes : function() {
@@ -165,6 +168,11 @@ define(
             undefined;
         });
 
+        var items = vm.getItems(
+          vm.filter.type,
+          vm.filter.subType
+        );
+
         return [
           m("h1", vm.title),
           m('select#vault-type', {
@@ -183,40 +191,8 @@ define(
               vm.filter.subType = this.value;
             }
           }, subTypes),
-          m('ul.items', vm.getItems(
-            vm.filter.type,
-            vm.filter.subType
-          ).map(function(item) {
-            var tier = 'item-tier-' + item.tier.name.toLowerCase();
-
-            return m('li.item.' + tier, {
-              config : function(el, didInit) {
-                if(! didInit) {
-                  $(el).tooltipster({
-                    position : 'right',
-                    maxWidth : 300,
-                    minWidth : 300,
-                    autoClose : true,
-                    functionBefore : function(origin, resolve) {
-                      origin.tooltipster('content',
-                        $(el).find('.item-tooltip'));
-
-                      resolve();
-                    }
-                  });
-                }
-              }
-            }, [
-              m('img.item-icon', {
-                src : item.icon,
-                width : 44,
-                height : 44
-              }),
-              m('div.item-tooltip.' + tier, [
-                m('header', item.name),
-                m('section', item.description)
-              ])
-            ]);
+          m('ul.items', items.map(function(item) {
+            return item.view();
           }))
         ];
       }

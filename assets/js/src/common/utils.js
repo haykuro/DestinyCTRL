@@ -36,7 +36,7 @@ define(function() {
     };
   };
 
-  Util.inheritClass = function (subClass, superClass) {
+  Util.inheritClass = function (subClass, superClass, extraProto) {
     if (typeof superClass !== 'function' && superClass !== null) {
       throw new TypeError('Super expression must either be null or' +
         ' a function, not ' + typeof superClass);
@@ -51,10 +51,22 @@ define(function() {
       }
     });
 
+    if(extraProto) {
+      for(var key in extraProto) {
+        subClass.prototype[key] = extraProto[key];
+      }
+    }
+
     if (superClass) {
       subClass.__proto__ = superClass;
     };
   }
+
+  Util.extend = function(target, source) {
+    for(var key in source) {
+      target[key] = source[key];
+    }
+  };
 
   return Util;
 });

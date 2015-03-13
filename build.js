@@ -14,7 +14,8 @@
     'models/bucket',
     'models/item',
     'models/equipment',
-    'modules/vault'
+    'modules/vault',
+    'modules/character',
   ],
   paths : {
     mithril : 'vendor/mithril',
