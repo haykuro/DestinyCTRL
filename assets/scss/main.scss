@@ -1,9 +1,4 @@
-@import 'vendor/opentip';
-
-//Main styles for DestinyCTRL
-
-//Bootstrap
-@import "vendor/bootstrap/bootstrap";
+@import 'vendor/bootstrap/bootstrap';
 
 /*
  * Components
@@ -18,7 +13,7 @@ body {
 
 .clear:before,
 .clear:after {
-    content: " ";
+    content: ' ';
     display: table;
 }
 
@@ -32,20 +27,42 @@ body {
     width: 120px
   }
 
-  ul {
+  .items {
     list-style: none;
     padding: 0;
     width : 300px;
+  }
 
-    li {
-      float: left;
-      margin-top: 1px;
-      margin-left: 1px;
-      border: 1px solid red;
+  .item {
+    float: left;
+    margin-top: 1px;
+    margin-left: 1px;
+    border: 1px solid red;
+    position: relative;
+
+    &:hover {
+      .item-tooltip {
+        display: block;
+      }
     }
+  }
 
-    img {
-      padding: 1px;
+  .item-icon {
+    padding: 1px;
+  }
+
+  .item-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    display: none;
+    width: 200px;
+    background: #F5F5F5;
+
+    header {
+      font-weight: bold;
     }
   }
 }

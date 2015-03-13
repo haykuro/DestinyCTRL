@@ -14,14 +14,10 @@
     'models/bucket',
     'models/item',
     'models/equipment',
-    'modules/vault',
+    'modules/vault'
   ],
   paths : {
-    mithril : 'vendor/mithril',
-    opentip : 'vendor/opentip'
-  },
-  shim : {
-    opentip : { exports : 'Opentip' }
+    mithril : 'vendor/mithril'
   },
   out : 'assets/js/dist/main.js',
   wrap : true,
