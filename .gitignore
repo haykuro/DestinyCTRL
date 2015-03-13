@@ -1,5 +1,7 @@
 node_modules/
-assets/js/dist/
 .sass-cache/
+assets/js/dist/
+assets/css/
 
 !assets/js/dist/.gitkeep
+!assets/css/.gitkeep
