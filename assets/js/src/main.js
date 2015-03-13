@@ -1,7 +1,3 @@
-require([
-  'DestinyCTRL',
-  'jquery',
-  'tooltips'
-], function(DestinyCTRL, $) {
+require(['DestinyCTRL'], function(DestinyCTRL) {
   DestinyCTRL.initialize();
 });

@@ -1,7 +1,8 @@
 define([
   'common/utils',
   'common/component',
-  'modules/item'
+  'modules/item',
+  'tooltips'
 ], function(Util, Component, Item) {
   function ItemModule() {
     Component.apply(this, arguments);
