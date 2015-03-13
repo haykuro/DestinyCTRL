@@ -1,8 +1,12 @@
 {
-  baseUrl : 'assets/js/src',
-  name : 'vendor/almond',
+  name : '../../../almond',
+  wrap : true,
+  baseUrl : 'app/src/js',
+  out : 'app/dist/js/app.js',
+  optimize : 'none',
+  generateSourceMaps : true,
+  preserveLicenseComments : false,
   include : [
-    'main',
     'DestinyCTRL',
     'common/api',
     'common/bungie',
@@ -15,19 +19,6 @@
     'models/item',
     'models/equipment',
     'modules/vault',
-    'modules/character',
-  ],
-  paths : {
-    mithril : 'vendor/mithril',
-    jquery : 'vendor/jquery',
-    tooltips : 'vendor/jquery.tooltipster'
-  },
-  shim : {
-    tooltips : ['jquery']
-  },
-  out : 'assets/js/dist/main.js',
-  wrap : true,
-  optimize : 'none',
-  generateSourceMaps : true,
-  preserveLicenseComments : false
+    'modules/character'
+  ]
 }

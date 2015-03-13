@@ -1,4 +1,4 @@
-define(['mithril'], function(m) {
+define(function() {
   function Component() {
     var args = [].slice.call(arguments);
     var init = false;
