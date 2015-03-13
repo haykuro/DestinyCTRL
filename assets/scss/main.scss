@@ -1,4 +1,9 @@
+/*
+ * Vendor
+ */
+
 @import 'vendor/bootstrap/bootstrap';
+@import 'vendor/tooltipster';
 
 /*
  * Components
@@ -31,38 +36,75 @@ body {
     list-style: none;
     padding: 0;
     width : 300px;
-  }
 
-  .item {
-    float: left;
-    margin-top: 1px;
-    margin-left: 1px;
-    border: 1px solid red;
-    position: relative;
-
-    &:hover {
-      .item-tooltip {
-        display: block;
-      }
+    .item {
+      float: left;
+      margin-top: 1px;
+      margin-left: 1px;
     }
   }
+}
+
+/**
+ * Items
+ */
+
+.item {
+  border: 2px solid black;
+  position: relative;
 
   .item-icon {
-    padding: 1px;
+    // padding: 1px;
   }
 
   .item-tooltip {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1;
-    pointer-events: none;
     display: none;
-    width: 200px;
-    background: #F5F5F5;
+  }
+}
 
+.item-tooltip {
+  padding: 10px;
+
+  header, section {
+    padding: 15px;
+  }
+
+  header {
+    background: rgba(245,245,245,0.9);
+    font-weight: bold;
+    color: rgb(30, 36, 43);
+  }
+
+  section {
+    background: rgba(30, 36, 43, 0.95);
+    color: rgba(245, 245, 245, 0.7);
+  }
+
+  &.item-tier-rare {
     header {
-      font-weight: bold;
+      background: rgba(85, 127, 158, 0.9);
+      color: #F5F5F5;
+    }
+  }
+
+  &.item-tier-legendary {
+    header {
+      background: rgba(78, 50, 99, 0.9);
+      color: #F5F5F5;
+    }
+  }
+
+  &.item-tier-exotic {
+    header {
+      background: rgba(206, 174, 50, 0.9);
+      color: #F5F5F5;
+    }
+  }
+
+  &.item-tier-uncommon {
+    header {
+      background: rgba(47, 107, 60, 0.9);
+      color: #F5F5F5;
     }
   }
 }

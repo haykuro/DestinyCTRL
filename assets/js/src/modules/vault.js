@@ -187,13 +187,32 @@ define(
             vm.filter.type,
             vm.filter.subType
           ).map(function(item) {
-            return m('li.item', [
+            var tier = 'item-tier-' + item.tier.name.toLowerCase();
+
+            return m('li.item.' + tier, {
+              config : function(el, didInit) {
+                if(! didInit) {
+                  $(el).tooltipster({
+                    position : 'right',
+                    maxWidth : 300,
+                    minWidth : 300,
+                    autoClose : true,
+                    functionBefore : function(origin, resolve) {
+                      origin.tooltipster('content',
+                        $(el).find('.item-tooltip'));
+
+                      resolve();
+                    }
+                  });
+                }
+              }
+            }, [
               m('img.item-icon', {
                 src : item.icon,
                 width : 44,
                 height : 44
               }),
-              m('div.item-tooltip', [
+              m('div.item-tooltip.' + tier, [
                 m('header', item.name),
                 m('section', item.description)
               ])

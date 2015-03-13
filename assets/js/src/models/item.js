@@ -7,10 +7,10 @@ define(function() {
     this.description = meta.itemDescription;
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stackSize = repo.stackSize;
-    this.tier = { type : meta.tierType, name : meta.tierName };
+    this.tier = {
+      type : meta.tierType, name : meta.tierTypeName
+    };
     this.type = {
-      metaType : meta.itemType,
-      metaTypeName : meta.itemTypeName,
       bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
         .replace(/^BUCKET_/, '')
     };

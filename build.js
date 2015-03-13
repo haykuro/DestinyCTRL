@@ -17,7 +17,12 @@
     'modules/vault'
   ],
   paths : {
-    mithril : 'vendor/mithril'
+    mithril : 'vendor/mithril',
+    jquery : 'vendor/jquery',
+    tooltips : 'vendor/jquery.tooltipster'
+  },
+  shim : {
+    tooltips : ['jquery']
   },
   out : 'assets/js/dist/main.js',
   wrap : true,
