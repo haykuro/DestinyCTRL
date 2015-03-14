@@ -14,7 +14,7 @@
   },
   "background": {
     "persistant": "false",
-    "scripts": ["background.js"]
+    "scripts": ["libs/background.js"]
   },
   "permissions": [
     "cookies",

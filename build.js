@@ -1,5 +1,5 @@
 {
-  name : '../../../almond',
+  name : '../../../libs/almond',
   wrap : true,
   baseUrl : 'app/src/js',
   out : 'app/dist/js/app.js',
