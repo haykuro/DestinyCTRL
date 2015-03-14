@@ -10,7 +10,8 @@ define(
         this.set({
           title : 'Vault',
           items : [],
-          filtered : false
+          filtered : [],
+          filtering : false
         }, true);
 
         var buckets = vault.getAll();
@@ -24,14 +25,15 @@ define(
         }
 
         this.on('change:search', function(query) {
-          if(! query) {
-            this.set('filtered', false);
-            return;
-          }
-
           var items = this.get('items');
           var terms = this.buildSearch(query);
           var filtered = [];
+
+          if(terms.length) {
+            this.set('filtering', true);
+          } else {
+            this.set('filtering', false);
+          }
 
           items.forEach(function(item) {
             var aggregate = [];
@@ -73,7 +75,7 @@ define(
             }
           });
 
-          this.set('filtered', filtered.length ? filtered : false);
+          this.set('filtered', filtered);
         });
       },
 
@@ -98,12 +100,21 @@ define(
       items : function() {
         var items = this.get('items');
         var filtered = this.get('filtered');
+        var filtering = this.get('filtering');
 
-        return filtered || items;
+        return filtering ? filtered : items;
       },
 
       buildSearch : function(query) {
-        return query.split(' ').map(function(term) {
+        if(query.length === 0) {
+          return [];
+        }
+
+        var parts = query.split(' ').filter(function(part) {
+          return part.length;
+        });
+
+        return parts.map(function(term) {
           var built = {};
 
           if(term.indexOf('type:') > -1) {
