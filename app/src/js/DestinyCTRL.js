@@ -5,7 +5,15 @@ require(['common/bungie', 'common/utils'], function(Bungie, Util) {
     require([
       'modules/vault'
     ], function(Vault) {
-      //
+      var accounts = Bungie.getAccounts();
+
+      if(accounts.length) {
+        accounts[0].getVault().then(function(vault) {
+          var vault = new Vault(vault);
+
+          vault.attach('#vault');
+        });
+      }
     });
   }).catch(function(err) {
     console.error(err);

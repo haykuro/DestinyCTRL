@@ -1,200 +1,136 @@
 define(
-  [
-    'common/bungie',
-    'modules/item'
-  ],
-  function(Bungie, Item) {
-    var vm = {
-      init : function(vault) {
-        this.title = 'Vault';
-        this.vault = vault;
-        this.filter = { type : 'ALL', subType : false };
-        this.types = [
-          {
-            name : 'All [%total%]',
-            filter : 'ALL',
-            count : 0,
-            types : []
-          },
-          {
-            name : 'Weapons [%total%]',
-            filter : 'WEAPONS',
-            count : 0,
-            types : [
-              { name : 'All [%total%]', filter : 'ALL', count : 0 },
-              { name : 'Primary [%total%]', filter : 'PRIMARY_WEAPON', count : 0 },
-              { name : 'Special [%total%]', filter : 'SPECIAL_WEAPON', count : 0 },
-              { name : 'Heavy [%total%]', filter : 'HEAVY_WEAPON', count : 0 }
-            ]
-          },
-          {
-            name : 'Armor [%total%]',
-            filter : 'ARMOR',
-            count : 0,
-            types : [
-              { name : 'All [%total%]', filter : 'ALL', count : 0 },
-              { name : 'Head [%total%]', filter : 'HEAD', count : 0 },
-              { name : 'Chest [%total%]', filter : 'CHEST', count : 0 },
-              { name : 'Arms [%total%]', filter : 'ARMS', count : 0 },
-              { name : 'Legs [%total%]', filter : 'LEGS', count : 0 },
-              { name : 'Class [%total%]', filter : 'CLASS_ITEMS', count : 0 },
-            ]
-          },
-          {
-            name : 'General [%total%]',
-            filter : 'GENERAL',
-            count : 0,
-            types : [
-              { name : 'All [%total%]', filter : 'ALL', count : 0 },
-              { name : 'Materials [%total%]', filter : 'MATERIALS', count : 0 },
-              { name : 'Consumables [%total%]', filter : 'CONSUMABLES', count : 0 },
-              { name : 'Shaders [%total%]', filter : 'SHADER', count : 0 },
-              { name : 'Emblems [%total%]', filter : 'EMBLEM', count : 0 },
-              { name : 'Vehicles [%total%]', filter : 'VEHICLES', count : 0 },
-              { name : 'Ships [%total%]', filter : 'SHIPS', count : 0 }
-            ]
-          }
-        ];
+  ['common/bungie', 'common/component', 'modules/item'],
+  function(Bungie, Component, ItemModule) {
+    function regexEscape(str) {
+      return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
 
-        this.sync();
-      },
+    var VaultModule = Component.subclass({
+      constructor : function(vault) {
+        this.set({
+          title : 'Vault',
+          items : [],
+          filtered : false
+        }, true);
 
-      sync : function() {
-        var _self = this;
-        var types = vm.getTypes();
+        var buckets = vault.getAll();
 
-        vm.getTypes().forEach(function(type, idx) {
-          if(type.filter === 'ALL') {
-            allTypeIdx = idx;
+        if(buckets.length) {
+          this.set('items', buckets.reduce(function(memo, bucket) {
+            return memo.concat(bucket.getItems());
+          }, []).map(function(item) {
+            return new ItemModule(item, true);
+          }));
+        }
+
+        this.on('change:search', function(query) {
+          if(! query) {
+            this.set('filtered', false);
+            return;
           }
 
-          if(type.types.length) {
-            type.types.forEach(function(subType) {
-              var items = _self.getItems(type.filter, subType.filter);
+          var items = this.get('items');
+          var terms = this.buildSearch(query);
+          var filtered = [];
 
-              subType.count = items.length
-              subType.name = subType.name.replace(/%total%/, subType.count);
+          items.forEach(function(item) {
+            var aggregate = [];
 
-              if(subType.filter != 'ALL') {
-                type.count += subType.count;
+            terms.forEach(function(term) {
+              if(term.type === 'type') {
+                if(term.term === 'weapon') {
+                  aggregate.push(item.item.isWeapon());
+                } else if(term.term === 'armor') {
+                  aggregate.push(item.item.isArmor());
+                } else if(term.term === 'general') {
+                  aggregate.push(item.item.isGeneral())
+                }
+              } else if(term.type === 'tier') {
+                if(term.term === 'common') {
+                  aggregate.push(item.item.isCommon());
+                } else if(term.term === 'uncommon') {
+                  aggregate.push(item.item.isUncommon());
+                } else if(term.term === 'rare') {
+                  aggregate.push(item.item.isRare());
+                } else if(term.term === 'legendary') {
+                  aggregate.push(item.item.isLegendary());
+                } else if(term.term === 'exotic') {
+                  aggregate.push(item.item.isExotic());
+                }
+              } else if (term.type === 'fuzzy') {
+                aggregate.push(term.term.test(item.get('name')));
               }
             });
-          } else {
-            type.count = _self.getItems().length;
-          }
 
-          type.name = type.name.replace(/%total%/, type.count);
-        });
-      },
+            if(aggregate.length) {
+              var pass = aggregate.reduce(function(a, b) {
+                return a && b;
+              });
 
-      getItems : function(type, subType) {
-        var buckets;
-
-        switch(type) {
-          case 'WEAPONS':
-            buckets = [vm.vault.getWeapons()];
-            break;
-          case 'ARMOR':
-            buckets = [vm.vault.getArmor()];
-            break;
-          case 'GENERAL':
-            buckets = [vm.vault.getGeneral()];
-            break;
-          default:
-            buckets = vm.vault.getAll();
-            break;
-        }
-
-        return buckets.reduce(function(memo, bucket) {
-          var items = memo.concat(bucket.getItems());
-
-          if(subType && subType != 'ALL') {
-            items = items.filter(function(item) {
-              return item.type.bucket === subType;
-            });
-          }
-
-          return items;
-        }, []).map(function(item) {
-          return new Item(item, true);
-        });
-      },
-
-      getTypes : function() {
-        return this.types;
-      },
-
-      getSubTypes : function() {
-        var _self = this;
-        var subTypes = [];
-
-        this.types.some(function(type) {
-          if(_self.filter.type === type.filter) {
-            subTypes = type.types;
-            return true;
-          }
-        });
-
-        return subTypes;
-      }
-    };
-
-    m.module(document.querySelector('#vault'), {
-      controller : function() {
-        var accounts = Bungie.getAccounts();
-
-        if(accounts.length) {
-          m.startComputation();
-
-          accounts[0].getVault().then(function(vault) {
-            vm.init(vault);
-
-            m.endComputation();
+              if(pass) {
+                filtered.push(item);
+              }
+            }
           });
-        }
+
+          this.set('filtered', filtered.length ? filtered : false);
+        });
       },
 
       view : function() {
-        var types = vm.getTypes().map(function(type) {
-          return type.count ?
-            m('option', { value : type.filter }, type.name) :
-            undefined;
+        var _self = this;
+        var items = this.items();
+        var itemViews = items.map(function(item) {
+          return item.view();
         });
-
-        var subTypes = vm.getSubTypes().map(function(type) {
-          return type.count ?
-            m('option', { value : type.filter }, type.name) :
-            undefined;
-        });
-
-        var items = vm.getItems(
-          vm.filter.type,
-          vm.filter.subType
-        );
 
         return [
-          m("h1", vm.title),
-          m('select#vault-type', {
-            onchange : function() {
-              vm.filter.type = this.value;
-              vm.filter.subType = false;
-            }
-          }, types),
-          m('select#vault-subType', {
-            selectedindex : 0,
-            disabled : ! subTypes.length,
-            style : {
-              display : ! subTypes.length ? 'none' : ''
-            },
-            onchange : function() {
-              vm.filter.subType = this.value;
-            }
-          }, subTypes),
-          m('ul.items', items.map(function(item) {
-            return item.view();
-          }))
+          m("h1", this.get('title')),
+          m('input[type=text]', {
+            onkeyup : m.withAttr('value', function(value) {
+              _self.set('search', value);
+            })
+          }),
+          m('ul.items', itemViews)
         ];
+      },
+
+      items : function() {
+        var items = this.get('items');
+        var filtered = this.get('filtered');
+
+        return filtered || items;
+      },
+
+      buildSearch : function(query) {
+        return query.split(' ').map(function(term) {
+          var built = {};
+
+          if(term.indexOf('type:') > -1) {
+            built.type = 'type';
+            built.term = term.replace(/^type:/, '');
+          } else if(term.indexOf('tier:') > -1) {
+            built.type = 'tier';
+            built.term = term.replace(/^tier:/, '');
+          } else if(term.length > 0) {
+            var strParts = term.split('').map(regexEscape);
+
+            built.type = 'fuzzy';
+            built.term = new RegExp(
+              strParts.length ?
+                strParts.reduce(function(a, b) {
+                  return a + '[^' + b + ']*' + b;
+                }) :
+                regexEscape(term) + '*?',
+              ['i']
+            );
+          }
+
+          return built;
+        })
       }
     });
+
+    return VaultModule;
   }
 );

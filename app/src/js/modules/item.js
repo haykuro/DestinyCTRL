@@ -1,18 +1,22 @@
 define([
   'common/utils',
-  'common/component'
-], function(Util, Component) {
-  function ItemModule() {
-    Component.apply(this, arguments);
-  }
+  'common/component',
+  'vendor/stapes'
+], function(Util, Component, Stapes) {
+  var ItemModule = Stapes.subclass({
+    constructor : function(item) {
+      var props = {};
 
-  Util.inheritClass(ItemModule, Component, {
-    controller : function(data) {
-      this.model.name = data.name;
-      this.model.description = data.description;
-      this.model.icon = data.icon;
-      this.model.tier = data.tier.name;
+      Object.keys(item).forEach(function(key) {
+        if(typeof item[key] !== 'function') {
+          props[key] = item[key];
+        }
+      });
+
+      this.set(props, true);
+      this.extend({ item : item });
     },
+
     view : function() {
       return m('div.item', {
         config : function(el, redraw) {
@@ -33,11 +37,11 @@ define([
         }
       }, [
         m('div.item-tooltip', [
-          m('header', this.model.name),
-          m('section', this.model.description)
+          m('header', this.get('name')),
+          m('section', this.get('description'))
         ]),
         m('img.item-icon', {
-          src : this.model.icon,
+          src : this.get('icon'),
           width : 44,
           height : 44
         })

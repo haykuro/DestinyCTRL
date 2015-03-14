@@ -24,8 +24,10 @@ gulp.task('build:app', ['vendor:js'], function(done) {
 });
 
 gulp.task('vendor:js', function() {
-  return gulp.src('app/src/js/vendor/**/*.js')
-    .pipe(gulp.dest('app/dist/js/vendor'));
+  return gulp.src([
+    'app/src/js/vendor/**/*.js',
+    '!app/src/js/vendor/stapes.js'
+  ]).pipe(gulp.dest('app/dist/js/vendor'));
 });
 
 gulp.task('watch', ['build'], function() {
