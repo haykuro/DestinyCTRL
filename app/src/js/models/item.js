@@ -89,5 +89,25 @@ define(function() {
     return this.type.bucket === 'SHIP';
   };
 
+  Item.prototype.isCommon = function() {
+    return this.tier.type === 2;
+  };
+
+  Item.prototype.isUncommon = function() {
+    return this.tier.type === 3;
+  };
+
+  Item.prototype.isRare = function() {
+    return this.tier.type === 4;
+  };
+
+  Item.prototype.isLegendary = function() {
+    return this.tier.type === 5;
+  };
+
+  Item.prototype.isExotic = function() {
+    return this.tier.type === 6;
+  };
+
   return Item;
 });
