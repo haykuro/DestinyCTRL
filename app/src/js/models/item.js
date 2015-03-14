@@ -19,8 +19,8 @@ define(function() {
   Item.prototype.isArmor = function() {
     return this.isHeadArmor() ||
       this.isChestArmor() ||
-      this.isArmsArmor() ||
-      this.isLegsArmor();
+      this.isArmArmor() ||
+      this.isLegArmor();
   };
 
   Item.prototype.isWeapon = function() {
