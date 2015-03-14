@@ -29,7 +29,7 @@ define(function() {
       this.isHeavyWeapon();
   };
 
-  Item.prototype.isOther = function() {
+  Item.prototype.isGeneral = function() {
     return ! this.isWeapon() && ! this.isArmor();
   };
 
