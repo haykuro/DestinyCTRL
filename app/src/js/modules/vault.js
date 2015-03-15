@@ -128,6 +128,8 @@ define(
         });
 
         return search.map(function(expression) {
+          expression = expression.toLowerCase();
+
           var builtExpr = {};
 
           if(expression.indexOf('type:') > -1) {
