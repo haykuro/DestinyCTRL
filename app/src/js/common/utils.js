@@ -68,5 +68,32 @@ define(function() {
     }
   };
 
+  Util.throttle = function(func, wait) {
+    var last = 0;
+    var timer;
+
+    return function() {
+      var now = new Date();
+      var exec = function() {
+        last = now;
+
+        func.apply(this, arguments);
+      }.bind(this);
+
+      if(timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+
+      if((now - last) > wait) {
+        exec();
+      } else {
+        timer = setTimeout(function() {
+          exec();
+        }, wait);
+      }
+    }
+  };
+
   return Util;
 });
