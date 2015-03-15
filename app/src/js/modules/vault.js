@@ -1,9 +1,16 @@
 define(
-  ['common/bungie', 'common/component', 'modules/item'],
-  function(Bungie, Component, ItemModule) {
+  ['common/bungie', 'common/component', 'modules/item', 'common/utils'],
+  function(Bungie, Component, ItemModule, _) {
     function regexEscape(str) {
       return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
+
+    function withAttrDebounce(prop, func, wait, immediate) {
+      return m.withAttr(prop, _.debounce(func, wait, immediate));
+    }
+
+    var validTypes = ['weapon', 'armor', 'general'];
+    var validTiers = ['common', 'uncommon', 'rare', 'legendary', 'exotic'];
 
     var VaultModule = Component.subclass({
       constructor : function(vault) {
@@ -80,7 +87,7 @@ define(
       },
 
       view : function() {
-        var _self = this;
+        var self = this;
         var items = this.items();
         var itemViews = items.map(function(item) {
           return item.view();
@@ -89,9 +96,15 @@ define(
         return [
           m("h1", this.get('title')),
           m('input[type=text]', {
-            onkeyup : m.withAttr('value', function(value) {
-              _self.set('search', value);
-            })
+            config : function(el, redraw) {
+              if(! redraw) {
+                el.addEventListener('keyup', _.throttle(function() {
+                  self.set('search', this.value);
+                  m.redraw.strategy('diff');
+                  m.redraw();
+                }, 250));
+              }
+            }
           }),
           m('ul.items', itemViews)
         ];
@@ -110,35 +123,45 @@ define(
           return [];
         }
 
-        var parts = query.split(' ').filter(function(part) {
+        var search = query.split(' ').filter(function(part) {
           return part.length;
         });
 
-        return parts.map(function(term) {
-          var built = {};
+        return search.map(function(expression) {
+          var builtExpr = {};
 
-          if(term.indexOf('type:') > -1) {
-            built.type = 'type';
-            built.term = term.replace(/^type:/, '');
-          } else if(term.indexOf('tier:') > -1) {
-            built.type = 'tier';
-            built.term = term.replace(/^tier:/, '');
-          } else if(term.length > 0) {
-            var strParts = term.split('').map(regexEscape);
+          if(expression.indexOf('type:') > -1) {
+            builtExpr.type = 'type';
+            builtExpr.term = expression.replace(/^type:/, '');
+          } else if(expression.indexOf('tier:') > -1) {
+            builtExpr.type = 'tier';
+            builtExpr.term = expression.replace(/^tier:/, '');
+          } else if(expression.length > 0) {
+            var parts = expression.split('').map(regexEscape);
 
-            built.type = 'fuzzy';
-            built.term = new RegExp(
-              strParts.length ?
-                strParts.reduce(function(a, b) {
+            builtExpr.type = 'fuzzy';
+            builtExpr.term = new RegExp(
+              parts.length ?
+                parts.reduce(function(a, b) {
                   return a + '[^' + b + ']*' + b;
                 }) :
-                regexEscape(term) + '*?',
+                regexEscape(expression) + '*?',
               ['i']
             );
           }
 
-          return built;
-        })
+          return builtExpr;
+        }).filter(function(builtExpr) {
+          var valid = true;
+
+          if(builtExpr.type === 'type') {
+            valid = validTypes.indexOf(builtExpr.term) > -1
+          } else if(builtExpr.type === 'tier') {
+            valid = validTiers.indexOf(builtExpr.term) > -1
+          }
+
+          return valid;
+        });
       }
     });
 
