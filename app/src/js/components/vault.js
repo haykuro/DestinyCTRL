@@ -60,19 +60,19 @@ define([
               } else if(filter.term === 'general') {
                 aggregate.push(item.item.isGeneral());
               } else if(filter.term === 'head') {
-                aggregate.push(item.item.isHead());
+                aggregate.push(item.item.isHeadArmor());
               } else if(filter.term === 'chest') {
-                aggregate.push(item.item.isChest());
+                aggregate.push(item.item.isChestArmor());
               } else if(filter.term === 'arm') {
-                aggregate.push(item.item.isArm());
+                aggregate.push(item.item.isArmArmor());
               } else if(filter.term === 'leg') {
-                aggregate.push(item.item.isLeg());
+                aggregate.push(item.item.isLegArmor());
               } else if(filter.term === 'primary') {
-                aggregate.push(item.item.isPrimary());
+                aggregate.push(item.item.isPrimaryWeapon());
               } else if(filter.term === 'special') {
-                aggregate.push(item.item.isSpecial());
+                aggregate.push(item.item.isSpecialWeapon());
               } else if(filter.term === 'heavy') {
-                aggregate.push(item.item.isHeavy());
+                aggregate.push(item.item.isHeavyWeapon());
               } else if(filter.term === 'common') {
                 aggregate.push(item.item.isCommon());
               } else if(filter.term === 'uncommon') {
