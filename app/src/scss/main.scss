@@ -12,18 +12,20 @@
 @import "components/sidebar";
 @import "components/content";
 
+@mixin clearfix {
+  &:before,
+  &:after {
+      content: ' ';
+      display: table;
+  }
+
+  &:after {
+      clear: both;
+  }
+}
+
 body {
     padding-top: 50px;
-}
-
-.clear:before,
-.clear:after {
-    content: ' ';
-    display: table;
-}
-
-.clear:after {
-    clear: both;
 }
 
 //Vault
@@ -82,13 +84,34 @@ body {
   padding: 10px;
 
   header, section {
-    padding: 15px;
+    padding: 5px;
   }
 
   header {
     background: rgba(245,245,245,0.9);
-    font-weight: bold;
-    color: rgb(30, 36, 43);
+    color: #1E242B;
+
+    .item-name {
+      font-size: 1.15em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .item-meta {
+      @include clearfix;
+
+      font-size: 0.9em;
+      opacity: 0.5;
+
+      .item-type {
+        float: left;
+      }
+
+      .item-tier {
+        float: right;
+        opacity: 0.5;
+      }
+    }
   }
 
   section {

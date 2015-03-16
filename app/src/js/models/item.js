@@ -13,6 +13,7 @@ define(function() {
       type : meta.tierType, name : meta.tierTypeName
     };
     this.type = {
+      name : meta.itemTypeName,
       bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
         .replace(/^BUCKET_/, '')
     };

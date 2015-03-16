@@ -18,8 +18,10 @@ define([
     view : function() {
       var stackable = this.item.isStackable();
       var complete = this.item.isComplete();
+      var type = this.get('type');
       var tier = this.get('tier');
-      var tierName = tier.name.toLowerCase()
+      var tierName = tier.name;
+      var tierNameLower = tierName.toLowerCase()
         .replace(/[^a-z]/, '-');
 
       return m('div.item', {
@@ -40,8 +42,14 @@ define([
           }
         }
       }, [
-        m('div.item-tooltip.item-tier-' + tierName, [
-          m('header', this.get('name')),
+        m('div.item-tooltip.item-tier-' + tierNameLower, [
+          m('header', [
+            m('div.item-name', this.get('name')),
+            m('div.item-meta', [
+              m('div.item-type', type.name),
+              m('div.item-tier', tierName)
+            ])
+          ]),
           m('section', this.get('description'))
         ]),
         m('div.item-icon-wrapper' + (complete ? '.item-complete' : ''), [
