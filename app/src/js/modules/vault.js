@@ -28,11 +28,11 @@ define(
         }
 
         this.on('change:search', function(query) {
-          var items = this.get('items');
-          var terms = this.buildSearch(query);
+          var items = this.get('items') || [];
+          var filters = this.parseFilters(query);
           var filtered = [];
 
-          if(terms.length) {
+          if(filters.length) {
             this.set('filtering', true);
           } else {
             this.set('filtering', false);
@@ -41,29 +41,29 @@ define(
           items.forEach(function(item) {
             var aggregate = [];
 
-            terms.forEach(function(term) {
-              if(term.type === 'type') {
-                if(term.term === 'weapon') {
+            filters.forEach(function(filter) {
+              if(filter.type === 'type') {
+                if(filter.term === 'weapon') {
                   aggregate.push(item.item.isWeapon());
-                } else if(term.term === 'armor') {
+                } else if(filter.term === 'armor') {
                   aggregate.push(item.item.isArmor());
-                } else if(term.term === 'general') {
+                } else if(filter.term === 'general') {
                   aggregate.push(item.item.isGeneral())
                 }
-              } else if(term.type === 'tier') {
-                if(term.term === 'common') {
+              } else if(filter.type === 'tier') {
+                if(filter.term === 'common') {
                   aggregate.push(item.item.isCommon());
-                } else if(term.term === 'uncommon') {
+                } else if(filter.term === 'uncommon') {
                   aggregate.push(item.item.isUncommon());
-                } else if(term.term === 'rare') {
+                } else if(filter.term === 'rare') {
                   aggregate.push(item.item.isRare());
-                } else if(term.term === 'legendary') {
+                } else if(filter.term === 'legendary') {
                   aggregate.push(item.item.isLegendary());
-                } else if(term.term === 'exotic') {
+                } else if(filter.term === 'exotic') {
                   aggregate.push(item.item.isExotic());
                 }
-              } else if (term.type === 'fuzzy') {
-                aggregate.push(term.term.test(item.get('name')));
+              } else if (filter.type === 'fuzzy') {
+                aggregate.push(filter.term.test(item.get('name')));
               }
             });
 
@@ -75,6 +75,8 @@ define(
               if(pass) {
                 filtered.push(item);
               }
+            } else {
+              filtered.push(item);
             }
           });
 
@@ -91,7 +93,7 @@ define(
 
         return [
           m("h1", this.get('title')),
-          m('input[type=text]', {
+          m('input#vault-filter[type=text]', {
             config : function(el, redraw) {
               if(! redraw) {
                 el.addEventListener('keyup', _.throttle(function() {
@@ -107,14 +109,12 @@ define(
       },
 
       items : function() {
-        var items = this.get('items');
-        var filtered = this.get('filtered');
         var filtering = this.get('filtering');
 
-        return filtering ? filtered : items;
+        return this.get(filtering ? 'filtered' : 'items');
       },
 
-      buildSearch : function(query) {
+      parseFilters : function(query) {
         if(query.length === 0) {
           return [];
         }
