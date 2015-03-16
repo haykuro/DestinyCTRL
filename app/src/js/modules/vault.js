@@ -5,10 +5,6 @@ define(
       return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 
-    function withAttrDebounce(prop, func, wait, immediate) {
-      return m.withAttr(prop, _.debounce(func, wait, immediate));
-    }
-
     var validTypes = ['weapon', 'armor', 'general'];
     var validTiers = ['common', 'uncommon', 'rare', 'legendary', 'exotic'];
 
