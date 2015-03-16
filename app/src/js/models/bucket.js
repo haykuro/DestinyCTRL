@@ -1,4 +1,7 @@
-define(['models/item', 'models/equipment'], function(Item, Equipment) {
+define([
+  'models/item',
+  'models/equipment'
+], function(Item, Equipment) {
   function Bucket(definitions, repo) {
     var bucketMeta = definitions.buckets[repo.bucketHash];
 

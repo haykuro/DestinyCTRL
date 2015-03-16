@@ -1,4 +1,6 @@
-define(['common/api', 'common/utils'], function(API, Util) {
+define([
+  'common/api'
+], function(API) {
   var Providers = {
     psn : 'https://www.bungie.net/en/User/SignIn/Psnid'
   };

@@ -1,4 +1,7 @@
-define(['common/api', 'models/equipment'], function(API, Equipment) {
+define([
+  'common/api',
+  'models/equipment'
+], function(API, Equipment) {
   function Character(account, data) {
     this._account = account;
 

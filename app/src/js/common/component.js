@@ -1,4 +1,6 @@
-define(['vendor/stapes'], function(Stapes) {
+define([
+  'vendor/stapes'
+], function(Stapes) {
   return Stapes.subclass({
     view : function() {
       return void 0;

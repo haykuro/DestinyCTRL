@@ -1,4 +1,6 @@
-require(['common/bungie', 'common/utils'], function(Bungie, Util) {
+require([
+  'common/bungie'
+], function(Bungie) {
   var _self = this;
 
   Bungie.authorize('psn').then(function() {

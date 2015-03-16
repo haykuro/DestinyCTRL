@@ -1,7 +1,6 @@
 define([
-  'common/utils',
   'common/component'
-], function(Util, Component) {
+], function(Component) {
   return Component.subclass({
     constructor : function(item) {
       var props = {};

@@ -1,4 +1,7 @@
-define(['common/utils', 'models/item'], function(Util, Item) {
+define([
+  'models/item',
+  'common/utils'
+], function(Item, _) {
   function createStat(stat, meta) {
     return {
       name : meta.statName,
@@ -39,7 +42,7 @@ define(['common/utils', 'models/item'], function(Util, Item) {
 
   // Inherit the methods from Item
 
-  Util.inheritClass(Equipment, Item);
+  _.inheritClass(Equipment, Item);
 
   Equipment.prototype._fillBaseStats = function(definitions, stats) {
     stats.forEach(function(stat) {

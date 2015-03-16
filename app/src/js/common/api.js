@@ -1,4 +1,6 @@
-define(['common/utils'], function(Util) {
+define([
+  'common/utils'
+], function(_) {
   function API() {}
 
   API.key = null;
@@ -9,7 +11,7 @@ define(['common/utils'], function(Util) {
     var _args = [].slice.call(arguments);
 
     return new Promise(function(resolve, reject) {
-      Util.getCookie('bungled').then(function(csrfToken) {
+      _.getCookie('bungled').then(function(csrfToken) {
         var _deleteCSRF = function() {
           delete _self._csrf;
         };
