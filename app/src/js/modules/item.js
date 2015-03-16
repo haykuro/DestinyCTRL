@@ -18,6 +18,10 @@ define([
     },
 
     view : function() {
+      var tier = this.get('tier');
+      var tierName = tier.name.toLowerCase()
+        .replace(/[^a-z]/, '-');
+
       return m('div.item', {
         config : function(el, redraw) {
           if(! redraw) {
@@ -36,7 +40,7 @@ define([
           }
         }
       }, [
-        m('div.item-tooltip', [
+        m('div.item-tooltip.item-tier-' + tierName, [
           m('header', this.get('name')),
           m('section', this.get('description'))
         ]),
