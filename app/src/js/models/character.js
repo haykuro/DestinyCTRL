@@ -12,7 +12,7 @@ define([
     this.equipment = [];
     this.inventory = [];
 
-    // this.sync();
+    this.sync();
   }
 
   Character.prototype.sync = function() {

@@ -39,6 +39,7 @@
     'models/bucket',
     'models/item',
     'models/equipment',
-    'components/vault'
+    'components/vault',
+    'components/character'
   ]
 }
