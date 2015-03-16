@@ -16,6 +16,8 @@ define([
     },
 
     view : function() {
+      var stackable = this.item.isStackable();
+      var complete = this.item.isComplete();
       var tier = this.get('tier');
       var tierName = tier.name.toLowerCase()
         .replace(/[^a-z]/, '-');
@@ -42,11 +44,16 @@ define([
           m('header', this.get('name')),
           m('section', this.get('description'))
         ]),
-        m('img.item-icon', {
-          src : this.get('icon'),
-          width : 44,
-          height : 44
-        })
+        m('div.item-icon-wrapper' + (complete ? '.item-complete' : ''), [
+          m('img.item-icon', {
+            src : this.get('icon'),
+            width : 44,
+            height : 44
+          }),
+        ]),
+        stackable ?
+          m('div.item-stack', this.get('stackSize') || 1) :
+          void 0
       ]);
     }
   });
