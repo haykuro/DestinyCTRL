@@ -7,6 +7,7 @@ define(function() {
     this.description = meta.itemDescription;
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stackSize = repo.stackSize;
+    this.damageType = repo.damageType,
     this.tier = {
       type : meta.tierType, name : meta.tierTypeName
     };
@@ -107,6 +108,22 @@ define(function() {
 
   Item.prototype.isExotic = function() {
     return this.tier.type === 6;
+  };
+
+  Item.prototype.isKinetic = function() {
+    return this.isWeapon() && this.damageType === 0;
+  };
+
+  Item.prototype.isArc = function() {
+    return this.isWeapon() && this.damageType === 2;
+  };
+
+  Item.prototype.isSolar = function() {
+    return this.isWeapon() && this.damageType === 3;
+  };
+
+  Item.prototype.isVoid = function() {
+    return this.isWeapon() && this.damageType === 4;
   };
 
   return Item;

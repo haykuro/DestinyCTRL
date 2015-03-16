@@ -8,8 +8,11 @@ define([
     return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
   }
 
-  var validTypes = ['weapon', 'armor', 'general'];
-  var validTiers = ['common', 'uncommon', 'rare', 'legendary', 'exotic'];
+  var validFilters = [
+    'weapon', 'armor', 'general',
+    'common', 'uncommon', 'rare', 'legendary', 'exotic',
+    'arc', 'solar', 'void', 'kinetic'
+  ];
 
   return Component.subclass({
     constructor : function(vault) {
@@ -45,16 +48,14 @@ define([
           var aggregate = [];
 
           filters.forEach(function(filter) {
-            if(filter.type === 'type') {
+            if(filter.type === 'is') {
               if(filter.term === 'weapon') {
                 aggregate.push(item.item.isWeapon());
               } else if(filter.term === 'armor') {
                 aggregate.push(item.item.isArmor());
               } else if(filter.term === 'general') {
                 aggregate.push(item.item.isGeneral())
-              }
-            } else if(filter.type === 'tier') {
-              if(filter.term === 'common') {
+              } else if(filter.term === 'common') {
                 aggregate.push(item.item.isCommon());
               } else if(filter.term === 'uncommon') {
                 aggregate.push(item.item.isUncommon());
@@ -64,6 +65,14 @@ define([
                 aggregate.push(item.item.isLegendary());
               } else if(filter.term === 'exotic') {
                 aggregate.push(item.item.isExotic());
+              } else if(filter.term === 'arc') {
+                aggregate.push(item.item.isArc());
+              } else if(filter.term === 'solar') {
+                aggregate.push(item.item.isSolar());
+              } else if(filter.term === 'void') {
+                aggregate.push(item.item.isVoid());
+              } else if(filter.term === 'kinetic') {
+                aggregate.push(item.item.isKinetic());
               }
             } else if (filter.type === 'fuzzy') {
               aggregate.push(filter.term.test(item.get('name')));
@@ -131,12 +140,9 @@ define([
 
         var builtExpr = {};
 
-        if(expression.indexOf('type:') > -1) {
-          builtExpr.type = 'type';
-          builtExpr.term = expression.replace(/^type:/, '');
-        } else if(expression.indexOf('tier:') > -1) {
-          builtExpr.type = 'tier';
-          builtExpr.term = expression.replace(/^tier:/, '');
+        if(expression.indexOf('is:') > -1) {
+          builtExpr.type = 'is';
+          builtExpr.term = expression.replace(/^is:/, '');
         } else if(expression.length > 0) {
           var parts = expression.split('').map(regexEscape);
 
@@ -155,10 +161,8 @@ define([
       }).filter(function(builtExpr) {
         var valid = true;
 
-        if(builtExpr.type === 'type') {
-          valid = validTypes.indexOf(builtExpr.term) > -1
-        } else if(builtExpr.type === 'tier') {
-          valid = validTiers.indexOf(builtExpr.term) > -1
+        if(builtExpr.type === 'is') {
+          valid = validFilters.indexOf(builtExpr.term) > -1
         }
 
         return valid;
