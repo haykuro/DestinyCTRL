@@ -138,6 +138,7 @@ define([
       return [
         m("h1", this.get('title')),
         m('input#vault-filter[type=text]', {
+          placeholder : 'e.g. is:primary is:kinetic',
           config : function(el, redraw) {
             if(! redraw) {
               el.addEventListener('keyup', _.throttle(function() {
