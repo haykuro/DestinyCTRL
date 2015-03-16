@@ -96,7 +96,7 @@ define([
               } else if(filter.term === 'emblem') {
                 aggregate.push(item.item.isEmblem());
               } else if(filter.term === 'class') {
-                aggregate.push(item.item.isClass());
+                aggregate.push(item.item.isClassItem());
               } else if(filter.term === 'vehicle') {
                 aggregate.push(item.item.isVehicle());
               } else if(filter.term === 'ship') {
