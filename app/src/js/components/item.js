@@ -18,9 +18,19 @@ define([
     view : function() {
       var stackable = this.item.isStackable();
       var complete = this.item.isComplete();
+      var type = this.get('type');
       var tier = this.get('tier');
-      var tierName = tier.name.toLowerCase()
+      var tierName = tier.name;
+      var tierNameLower = tierName.toLowerCase()
         .replace(/[^a-z]/, '-');
+
+      var primaryStat;
+
+      if(this.item.isArmor() || this.item.isWeapon()) {
+        var primaryStatId = this.get('primaryStatId');
+
+        primaryStat = this.get('stats')[primaryStatId];
+      }
 
       return m('div.item', {
         config : function(el, redraw) {
@@ -40,9 +50,23 @@ define([
           }
         }
       }, [
-        m('div.item-tooltip.item-tier-' + tierName, [
-          m('header', this.get('name')),
-          m('section', this.get('description'))
+        m('div.item-tooltip.item-tier-' + tierNameLower, [
+          m('header', [
+            m('div.item-name', this.get('name')),
+            m('div.item-meta', [
+              m('div.item-type', type.name),
+              m('div.item-tier', tierName)
+            ])
+          ]),
+          m('section', [
+            primaryStat ?
+              m('div.item-primary-stat', [
+                m('div.item-stat', primaryStat.value),
+                m('div.item-stat-name', primaryStat.name)
+              ]) :
+              void 0,
+            m('div.item-description', this.get('description'))
+          ])
         ]),
         m('div.item-icon-wrapper' + (complete ? '.item-complete' : ''), [
           m('img.item-icon', {
