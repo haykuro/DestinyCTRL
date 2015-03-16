@@ -12,13 +12,13 @@ define([
     this.equipment = [];
     this.inventory = [];
 
-    this.sync();
+    //this.sync();
   }
 
   Character.prototype.sync = function() {
     var _self = this;
 
-    API.requestWithToken(
+    return API.requestWithToken(
       'GET',
       '/Destiny/' + _self._account.type +
       '/Account/' + _self._account.id +

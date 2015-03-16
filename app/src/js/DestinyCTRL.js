@@ -6,8 +6,9 @@ require([
   Bungie.authorize('psn').then(function() {
     require([
       'components/vault',
-      'components/filter'
-    ], function(Vault, Filter) {
+      'components/filter',
+      'components/character'
+    ], function(Vault, Filter, Character) {
       var filter = new Filter();
 
       filter.attach('#filter');
@@ -22,6 +23,19 @@ require([
 
           filter.addComponent(vault);
         });
+
+        var characters = accounts[0].getCharacters();
+        var allCharacters = document.getElementById('characters');
+        //console.log(characters);
+          for(var i = 0; i < characters.length; i++) {
+
+          var element = document.createElement('div');
+          element.id = 'char' + i;
+          var character = new Character(characters[i]);
+          character.attach(element);
+          allCharacters.appendChild(element);
+        }
+
       }
     });
   }).catch(function(err) {

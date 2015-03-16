@@ -44,7 +44,7 @@ define([
         resolve(vault);
       }).catch(reject);
     });
-  }
+  };
 
   return Account;
 });
