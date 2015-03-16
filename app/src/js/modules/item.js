@@ -1,9 +1,8 @@
 define([
   'common/utils',
-  'common/component',
-  'vendor/stapes'
-], function(Util, Component, Stapes) {
-  var ItemModule = Stapes.subclass({
+  'common/component'
+], function(Util, Component) {
+  var ItemModule = Component.subclass({
     constructor : function(item) {
       var props = {};
 
