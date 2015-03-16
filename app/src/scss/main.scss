@@ -39,8 +39,8 @@ body {
 
     .item {
       float: left;
-      margin-top: 1px;
-      margin-left: 1px;
+      margin-top: 2px;
+      margin-left: 2px;
     }
   }
 }
@@ -50,15 +50,31 @@ body {
  */
 
 .item {
-  border: 2px solid black;
   position: relative;
 
-  .item-icon {
-    // padding: 1px;
+  .item-icon-wrapper {
+    border: 2px solid #DCDCDC;
+
+    &.item-complete {
+      border-color: #EFDD56;
+    }
   }
 
   .item-tooltip {
     display: none;
+  }
+
+  .item-stack {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.5em;
+    font-weight: bold;
+    width: 15px;
+    line-height: 15px;
+    background: #F5F5F5;
+    pointer-events: none;
   }
 }
 

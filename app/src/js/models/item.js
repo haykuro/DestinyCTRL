@@ -8,6 +8,7 @@ define(function() {
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stackSize = repo.stackSize;
     this.damageType = repo.damageType,
+    this.gridComplete = repo.isGridComplete;
     this.tier = {
       type : meta.tierType, name : meta.tierTypeName
     };
@@ -16,6 +17,10 @@ define(function() {
         .replace(/^BUCKET_/, '')
     };
   }
+
+  Item.prototype.isComplete = function() {
+    return this.gridComplete;
+  };
 
   Item.prototype.isArmor = function() {
     return this.isHeadArmor() ||
@@ -32,6 +37,10 @@ define(function() {
 
   Item.prototype.isGeneral = function() {
     return ! this.isWeapon() && ! this.isArmor();
+  };
+
+  Item.prototype.isStackable = function() {
+    return this.isMaterial() || this.isConsumable();
   };
 
   Item.prototype.isMaterial = function() {
