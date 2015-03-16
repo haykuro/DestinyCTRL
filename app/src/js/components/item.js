@@ -24,6 +24,14 @@ define([
       var tierNameLower = tierName.toLowerCase()
         .replace(/[^a-z]/, '-');
 
+      var primaryStat;
+
+      if(this.item.isArmor() || this.item.isWeapon()) {
+        var primaryStatId = this.get('primaryStatId');
+
+        primaryStat = this.get('stats')[primaryStatId];
+      }
+
       return m('div.item', {
         config : function(el, redraw) {
           if(! redraw) {
@@ -50,7 +58,15 @@ define([
               m('div.item-tier', tierName)
             ])
           ]),
-          m('section', this.get('description'))
+          m('section', [
+            primaryStat ?
+              m('div.item-primary-stat', [
+                m('div.item-stat', primaryStat.value),
+                m('div.item-stat-name', primaryStat.name)
+              ]) :
+              void 0,
+            m('div.item-description', this.get('description'))
+          ])
         ]),
         m('div.item-icon-wrapper' + (complete ? '.item-complete' : ''), [
           m('img.item-icon', {

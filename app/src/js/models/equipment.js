@@ -29,7 +29,7 @@ define([
     }
 
     if(meta.primaryBaseStat) {
-      this._fillPrimaryStat(definitions, meta.primaryBaseStat);
+      this._fillPrimaryStat(definitions, repo.primaryStat);
     }
 
     if(repo.nodes) {
