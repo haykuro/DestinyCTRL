@@ -39,6 +39,6 @@
     'models/bucket',
     'models/item',
     'models/equipment',
-    'modules/vault'
+    'components/vault'
   ]
 }
