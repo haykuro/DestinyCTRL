@@ -5,8 +5,13 @@ require([
 
   Bungie.authorize('psn').then(function() {
     require([
-      'components/vault'
-    ], function(Vault) {
+      'components/vault',
+      'components/filter'
+    ], function(Vault, Filter) {
+      var filter = new Filter();
+
+      filter.attach('#filter');
+
       var accounts = Bungie.getAccounts();
 
       if(accounts.length) {
@@ -14,6 +19,8 @@ require([
           var vault = new Vault(vault);
 
           vault.attach('#vault');
+
+          filter.addComponent(vault);
         });
       }
     });

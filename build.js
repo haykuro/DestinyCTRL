@@ -40,6 +40,7 @@
     'models/item',
     'models/equipment',
     'components/vault',
-    'components/character'
+    'components/character',
+    'components/filter'
   ]
 }
