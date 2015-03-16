@@ -2,7 +2,8 @@ define([
   'common/api'
 ], function(API) {
   var Providers = {
-    psn : 'https://www.bungie.net/en/User/SignIn/Psnid'
+    psn : 'https://www.bungie.net/en/User/SignIn/Psnid',
+    xbl : 'https://www.bungie.net/en/User/SignIn/Wlid'
   };
 
   function Authorizer(provider) {
@@ -83,7 +84,7 @@ define([
       var sH = screen.availHeight;
       var sW = screen.availWidth;
       var wH = sH * 0.75 | 0;
-      var wW = 300;
+      var wW = 325;
 
       try {
         chrome.windows.create({
