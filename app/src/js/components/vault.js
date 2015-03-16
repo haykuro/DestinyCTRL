@@ -10,8 +10,12 @@ define([
 
   var validFilters = [
     'weapon', 'armor', 'general',
+    'head', 'chest', 'arm', 'leg',
+    'primary', 'special', 'heavy',
     'common', 'uncommon', 'rare', 'legendary', 'exotic',
-    'arc', 'solar', 'void', 'kinetic'
+    'arc', 'solar', 'void', 'kinetic',
+    'shader', 'emblem', 'class', 'vehicle', 'ship',
+    'material', 'consumable'
   ];
 
   return Component.subclass({
@@ -54,7 +58,21 @@ define([
               } else if(filter.term === 'armor') {
                 aggregate.push(item.item.isArmor());
               } else if(filter.term === 'general') {
-                aggregate.push(item.item.isGeneral())
+                aggregate.push(item.item.isGeneral());
+              } else if(filter.term === 'head') {
+                aggregate.push(item.item.isHead());
+              } else if(filter.term === 'chest') {
+                aggregate.push(item.item.isChest());
+              } else if(filter.term === 'arm') {
+                aggregate.push(item.item.isArm());
+              } else if(filter.term === 'leg') {
+                aggregate.push(item.item.isLeg());
+              } else if(filter.term === 'primary') {
+                aggregate.push(item.item.isPrimary());
+              } else if(filter.term === 'special') {
+                aggregate.push(item.item.isSpecial());
+              } else if(filter.term === 'heavy') {
+                aggregate.push(item.item.isHeavy());
               } else if(filter.term === 'common') {
                 aggregate.push(item.item.isCommon());
               } else if(filter.term === 'uncommon') {
@@ -73,6 +91,20 @@ define([
                 aggregate.push(item.item.isVoid());
               } else if(filter.term === 'kinetic') {
                 aggregate.push(item.item.isKinetic());
+              } else if(filter.term === 'shader') {
+                aggregate.push(item.item.isShader());
+              } else if(filter.term === 'emblem') {
+                aggregate.push(item.item.isEmblem());
+              } else if(filter.term === 'class') {
+                aggregate.push(item.item.isClass());
+              } else if(filter.term === 'vehicle') {
+                aggregate.push(item.item.isVehicle());
+              } else if(filter.term === 'ship') {
+                aggregate.push(item.item.isShip());
+              } else if(filter.term === 'material') {
+                aggregate.push(item.item.isMaterial());
+              } else if(filter.term === 'consumable') {
+                aggregate.push(item.item.isConsumable());
               }
             } else if (filter.type === 'fuzzy') {
               aggregate.push(filter.term.test(item.get('name')));
