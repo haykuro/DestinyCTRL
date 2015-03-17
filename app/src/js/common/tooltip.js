@@ -60,8 +60,8 @@ define(function() {
   Tooltip.prototype.updatePosition = function(x, y) {
     var tooltip = this.getTooltip();
     var gap = 15;
-    var xDelta = x + gap;
-    var yDelta = y - (tooltip.offsetHeight / 2);
+    var xDelta = window.scrollX + x + gap;
+    var yDelta = window.scrollY + y - (tooltip.offsetHeight / 2);
     var topEdge = yDelta - gap;
     var bottomEdge = (yDelta + gap) + tooltip.offsetHeight;
     var leftEdge = xDelta - gap;
