@@ -26,14 +26,12 @@ require([
 
         var characters = accounts[0].getCharacters();
         var allCharacters = document.getElementById('characters');
-        //console.log(characters);
-          for(var i = 0; i < characters.length; i++) {
-
+        for(var i = 0; i < characters.length; i++) {
           var element = document.createElement('div');
           element.id = 'char' + i;
           var character = new Character(characters[i]);
-          character.attach(element);
           allCharacters.appendChild(element);
+          character.attach(element);
         }
 
       }
