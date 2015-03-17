@@ -1,6 +1,7 @@
 define([
-  'common/component'
-], function(Component) {
+  'common/component',
+  'common/tooltip'
+], function(Component, Tooltip) {
   return Component.subclass({
     constructor : function(item) {
       var props = {};
@@ -108,7 +109,7 @@ define([
             m('div.statName', primaryStat.name)
           ])
         ]);
-      }
+      }d
     },
 
     view : function() {
@@ -122,18 +123,7 @@ define([
       return m('div.item', {
         config : function(el, redraw) {
           if(! redraw) {
-            $(el).tooltipster({
-              position : 'right',
-              maxWidth : 300,
-              minWidth : 300,
-              autoClose : true,
-              functionBefore : function(origin, resolve) {
-                origin.tooltipster('content',
-                  $(el).find('.itemTooltip'));
-
-                resolve();
-              }
-            });
+            new Tooltip(el, $(el).find('.itemTooltip')[0]);
           }
         }
       }, [

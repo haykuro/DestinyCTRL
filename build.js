@@ -33,6 +33,7 @@
     'common/bungie',
     'common/utils',
     'common/authorizer',
+    'common/tooltip',
     'models/account',
     'models/character',
     'models/vault',
