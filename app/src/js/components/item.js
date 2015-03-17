@@ -123,7 +123,7 @@ define([
       return m('div.item', {
         config : function(el, redraw) {
           if(! redraw) {
-            new Tooltip(el, $(el).find('.itemTooltip')[0]);
+            new Tooltip(el, el.querySelector('.itemTooltip'), 100);
           }
         }
       }, [
