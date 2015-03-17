@@ -115,10 +115,12 @@ define([
     view : function() {
       var stackable = this.item.isStackable();
       var complete = this.item.isComplete();
+      var description = this.get('description');
       var type = this.get('type');
       var tier = this.get('tier');
       var tierName = tier.name;
       var hasStats = this.item.isWeapon() || this.item.isArmor();
+      var hasDetails = description || hasStats;
 
       return m('div.item', {
         config : function(el, redraw) {
@@ -145,19 +147,21 @@ define([
               m('div.tier', tierName)
             ])
           ]),
-          m('div.details', [
-            hasStats ?
-              this.primaryStatView() :
-              void 0,
-            m('div.description', this.get('description')),
-            hasStats ?
-              m('div.stats',
-                this.item.isWeapon() ?
-                  this.weaponStatsView() :
-                  this.armorStatsView()
-              ) :
-              void 0
-          ])
+          hasDetails ?
+            m('div.details', [
+              hasStats ?
+                this.primaryStatView() :
+                void 0,
+              m('div.description', description),
+              hasStats ?
+                m('div.stats',
+                  this.item.isWeapon() ?
+                    this.weaponStatsView() :
+                    this.armorStatsView()
+                ) :
+                void 0
+            ]) :
+            void 0
         ]),
       ]);
     }
