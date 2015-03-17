@@ -6,7 +6,9 @@ define([
     return {
       name : meta.statName,
       value : stat.value,
+      maxValue : stat.maximumValue,
       description : meta.statDescription,
+      percentage : stat.value / stat.maximumValue * 100,
       icon : 'https://www.bungie.net/' + meta.icon.replace(/^\//, '')
     };
   }
@@ -25,11 +27,11 @@ define([
     this.talentGrid = [];
     this.damage = false;
 
-    if(repo.baseStats) {
-      this._fillBaseStats(definitions, repo.baseStats);
+    if(repo.stats) {
+      this._fillStats(definitions, repo.stats);
     }
 
-    if(meta.primaryBaseStat) {
+    if(repo.primaryStat) {
       this._fillPrimaryStat(definitions, repo.primaryStat);
     }
 
@@ -53,7 +55,7 @@ define([
 
   _.inheritClass(Equipment, Item);
 
-  Equipment.prototype._fillBaseStats = function(definitions, stats) {
+  Equipment.prototype._fillStats = function(definitions, stats) {
     stats.forEach(function(stat) {
       var meta = definitions.stats[stat.statHash];
 

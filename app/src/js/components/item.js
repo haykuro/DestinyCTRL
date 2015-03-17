@@ -15,22 +15,109 @@ define([
       this.extend({ item : item });
     },
 
+    weaponStatsView : function() {
+      var primaryStatId = this.get('primaryStatId');
+      var magazineStatId = 'STAT_MAGAZINE_SIZE';
+      var rows = [];
+      var stats = this.get('stats');
+
+      if(stats) {
+        rows = [];
+
+        Object.keys(stats).filter(function(key) {
+          return key !== primaryStatId && key !== magazineStatId;
+        }).forEach(function(key) {
+          var stat = stats[key];
+
+          rows.push(
+            m('tr', [
+              m('td.name', stat.name),
+              m('td', [
+                m('div.value', [
+                  m('div.current', {
+                    style : {
+                      width : stat.percentage + '%'
+                    }
+                  })
+                ])
+              ])
+            ])
+          );
+        }, this);
+
+        var magazineStat = stats[magazineStatId];
+
+        if(magazineStat) {
+          rows.push(
+            m('tr', [
+              m('td.name', magazineStat.name),
+              m('td', m('strong', magazineStat.value))
+            ])
+          );
+        }
+      }
+
+      return rows.length ? m('table.weaponStatsTable', rows) : void 0;
+    },
+
+    armorStatsView : function() {
+      var stats = this.get('stats');
+      var primaryStatId = this.get('primaryStatId');
+      var rows = [];
+
+      Object.keys(stats).filter(function(key) {
+        var stat = stats[key];
+
+        return key !== primaryStatId && stat.value > 0;
+      }).forEach(function(key) {
+        var stat = stats[key];
+
+        rows.push(
+          m('div.stat', [
+            m('img.icon', {
+              src : stat.icon,
+              width : 20,
+              height : 20
+            }),
+            stat.name + ' ',
+            m('strong', '+' + stat.value)
+          ])
+        );
+      });
+
+      return rows.length ? m('div.armorStats', rows) : void 0;
+    },
+
+    primaryStatView : function() {
+      var primaryStatId = this.get('primaryStatId');
+
+      if(primaryStatId) {
+        var primaryStat = this.get('stats')[primaryStatId];
+        var damage = this.get('damage');
+
+        return m('div.heroStat' + (damage ? '.damageType' + damage.type : ''), [
+          damage ?
+            m('div.damageType', {
+              style : {
+                backgroundImage : 'url(' + damage.icon + ')'
+              }
+            }) :
+            void 0,
+          m('div.primaryStat', [
+            m('div.stat', primaryStat.value),
+            m('div.statName', primaryStat.name)
+          ])
+        ]);
+      }
+    },
+
     view : function() {
       var stackable = this.item.isStackable();
       var complete = this.item.isComplete();
       var type = this.get('type');
       var tier = this.get('tier');
       var tierName = tier.name;
-
-      var primaryStat;
-      var damage;
-
-      if(this.item.isArmor() || this.item.isWeapon()) {
-        var primaryStatId = this.get('primaryStatId');
-
-        primaryStat = this.get('stats')[primaryStatId];
-        damage = this.get('damage');
-      }
+      var hasStats = this.item.isWeapon() || this.item.isArmor();
 
       return m('div.item', {
         config : function(el, redraw) {
@@ -50,10 +137,6 @@ define([
           }
         }
       }, [
-        /**
-         * Icon/Tile
-         */
-
         m('div.iconWrapper' + (complete ? '.complete' : ''), [
           m('img.icon', {
             src : this.get('icon'),
@@ -61,19 +144,9 @@ define([
             height : 44
           }),
         ]),
-
-        /**
-         * Stack Size
-         */
-
         stackable ?
           m('div.stack', this.get('stackSize') || 1) :
           void 0,
-
-        /**
-         * Tooltip
-         */
-
         m('div.itemTooltip.tier' + tierName, [
           m('div.header', [
             m('div.name', this.get('name')),
@@ -83,22 +156,17 @@ define([
             ])
           ]),
           m('div.details', [
-            primaryStat ?
-              m('div.heroStat' + (damage ? '.damageType' + damage.type : ''), [
-                damage ?
-                  m('div.damageType', {
-                    style : {
-                      backgroundImage : 'url(' + damage.icon + ')'
-                    }
-                  }) :
-                  void 0,
-                m('div.primaryStat', [
-                  m('div.stat', primaryStat.value),
-                  m('div.statName', primaryStat.name)
-                ])
-              ]) :
+            hasStats ?
+              this.primaryStatView() :
               void 0,
-            m('div.description', this.get('description'))
+            m('div.description', this.get('description')),
+            hasStats ?
+              m('div.stats',
+                this.item.isWeapon() ?
+                  this.weaponStatsView() :
+                  this.armorStatsView()
+              ) :
+              void 0
           ])
         ]),
       ]);
