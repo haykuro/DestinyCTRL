@@ -8,7 +8,6 @@ define([
         var _self = this;
         m.startComputation();
         character.sync().then(function(){
-
           _self.set({
             level : character.level,
             bg : character.background,
@@ -18,7 +17,7 @@ define([
             inventory : character.getInventory()
           }, true);
 
-          var equipments = character.getInventory();
+          var equipments = character.getEquipment();
 
           if(equipments.length) {
             _self.set('equipment', equipments.reduce(function(memo, equipment) {
@@ -27,6 +26,8 @@ define([
               return new ItemComponent(item, true);
             }));
           }
+          m.endComputation();
+        }).catch(function(err) {
           m.endComputation();
         });
       },
