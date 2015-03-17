@@ -21,15 +21,15 @@ define([
       var type = this.get('type');
       var tier = this.get('tier');
       var tierName = tier.name;
-      var tierNameLower = tierName.toLowerCase()
-        .replace(/[^a-z]/, '-');
 
       var primaryStat;
+      var damage;
 
       if(this.item.isArmor() || this.item.isWeapon()) {
         var primaryStatId = this.get('primaryStatId');
 
         primaryStat = this.get('stats')[primaryStatId];
+        damage = this.get('damage');
       }
 
       return m('div.item', {
@@ -42,7 +42,7 @@ define([
               autoClose : true,
               functionBefore : function(origin, resolve) {
                 origin.tooltipster('content',
-                  $(el).find('.item-tooltip'));
+                  $(el).find('.itemTooltip'));
 
                 resolve();
               }
@@ -50,34 +50,57 @@ define([
           }
         }
       }, [
-        m('div.item-tooltip.item-tier-' + tierNameLower, [
-          m('header', [
-            m('div.item-name', this.get('name')),
-            m('div.item-meta', [
-              m('div.item-type', type.name),
-              m('div.item-tier', tierName)
-            ])
-          ]),
-          m('section', [
-            primaryStat ?
-              m('div.item-primary-stat', [
-                m('div.item-stat', primaryStat.value),
-                m('div.item-stat-name', primaryStat.name)
-              ]) :
-              void 0,
-            m('div.item-description', this.get('description'))
-          ])
-        ]),
-        m('div.item-icon-wrapper' + (complete ? '.item-complete' : ''), [
-          m('img.item-icon', {
+        /**
+         * Icon/Tile
+         */
+
+        m('div.iconWrapper' + (complete ? '.complete' : ''), [
+          m('img.icon', {
             src : this.get('icon'),
             width : 44,
             height : 44
           }),
         ]),
+
+        /**
+         * Stack Size
+         */
+
         stackable ?
-          m('div.item-stack', this.get('stackSize') || 1) :
-          void 0
+          m('div.stack', this.get('stackSize') || 1) :
+          void 0,
+
+        /**
+         * Tooltip
+         */
+
+        m('div.itemTooltip.tier' + tierName, [
+          m('div.header', [
+            m('div.name', this.get('name')),
+            m('div.meta', [
+              m('div.type', type.name),
+              m('div.tier', tierName)
+            ])
+          ]),
+          m('div.details', [
+            primaryStat ?
+              m('div.heroStat' + (damage ? '.damageType' + damage.type : ''), [
+                damage ?
+                  m('div.damageType', {
+                    style : {
+                      backgroundImage : 'url(' + damage.icon + ')'
+                    }
+                  }) :
+                  void 0,
+                m('div.primaryStat', [
+                  m('div.stat', primaryStat.value),
+                  m('div.statName', primaryStat.name)
+                ])
+              ]) :
+              void 0,
+            m('div.description', this.get('description'))
+          ])
+        ]),
       ]);
     }
   });

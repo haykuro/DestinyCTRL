@@ -23,6 +23,7 @@ define([
     this.stats = {};
     this.primaryStatId = null;
     this.talentGrid = [];
+    this.damage = false;
 
     if(repo.baseStats) {
       this._fillBaseStats(definitions, repo.baseStats);
@@ -37,6 +38,14 @@ define([
         repo.nodes,
         definitions.talentGrids[meta.talentGridHash]
       );
+
+      if(repo.damageTypeNodeIndex > -1 && repo.damageTypeStepIndex > -1) {
+        this._fillDamageType(
+          repo.damageTypeNodeIndex,
+          repo.damageTypeStepIndex,
+          definitions.talentGrids[meta.talentGridHash]
+        );
+      }
     }
   }
 
@@ -111,6 +120,29 @@ define([
         return a.row - b.row;
       });
     });
+  };
+
+  Equipment.prototype._fillDamageType = function(node, step, definitions) {
+    var meta = definitions.nodes[node].steps[step];
+    var name = meta.nodeStepName;
+    var type = 'None';
+
+    if(meta.damageType === 0) {
+      type = 'Kinetic';
+    } else if(meta.damageType === 2) {
+      type = 'Arc';
+    } else if(meta.damageType === 3) {
+      type = 'Solar';
+    } else if(meta.damageType === 4) {
+      type = 'Void';
+    }
+
+    this.damage = {
+      name : name,
+      icon : 'https://www.bungie.net/' + meta.icon.replace(/^\//, ''),
+      type : type,
+      description : meta.nodeStepDescription
+    };
   };
 
   return Equipment;

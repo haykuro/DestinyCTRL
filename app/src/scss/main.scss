@@ -54,19 +54,15 @@ body {
 .item {
   position: relative;
 
-  .item-icon-wrapper {
+  .iconWrapper {
     border: 2px solid #DCDCDC;
 
-    &.item-complete {
+    &.complete {
       border-color: #EFDD56;
     }
   }
 
-  .item-tooltip {
-    display: none;
-  }
-
-  .item-stack {
+  .stack {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -78,94 +74,148 @@ body {
     background: #F5F5F5;
     pointer-events: none;
   }
+
+  .itemTooltip {
+    display: none;
+  }
 }
 
-.item-tooltip {
+.itemTooltip {
   padding: 10px;
 
-  header, section {
+  .header, .details {
+    @include clearfix;
+
     padding: 5px;
   }
 
-  header {
+  .header {
     background: rgba(245,245,245,0.9);
     color: #1E242B;
 
-    .item-name {
+    .name {
       font-size: 1.15em;
       text-transform: uppercase;
       margin-bottom: 2px;
     }
 
-    .item-meta {
+    .meta {
       @include clearfix;
 
       font-size: 0.9em;
       opacity: 0.5;
 
-      .item-type {
+      .type {
         float: left;
       }
 
-      .item-tier {
+      .tier {
         float: right;
         opacity: 0.5;
       }
     }
   }
 
-  section {
-    background: rgba(30, 36, 43, 0.95);
-    color: rgba(245, 245, 245, 0.7);
-
-    .item-primary-stat {
-      margin-bottom: 5px;
-      padding-bottom: 5px;
-      border-bottom: 1px solid;
-      border-color: rgba(245, 245, 245, 0.1);
-    }
-
-    .item-stat {
-      font-size: 2.5em;
-      line-height: 1;
-      font-weight: bold;
-    }
-
-    .item-stat-name {
-      font-size: 0.9em;
-      text-transform: uppercase;
-    }
-
-    .item-description {
-      font-style: italic;
-    }
-  }
-
-  &.item-tier-rare {
-    header {
+  &.tierRare {
+    .header {
       background: rgba(85, 127, 158, 0.9);
       color: #F5F5F5;
     }
   }
 
-  &.item-tier-legendary {
-    header {
+  &.tierLegendary {
+    .header {
       background: rgba(78, 50, 99, 0.9);
       color: #F5F5F5;
     }
   }
 
-  &.item-tier-exotic {
-    header {
+  &.tierExotic {
+    .header {
       background: rgba(206, 174, 50, 0.9);
       color: #F5F5F5;
     }
   }
 
-  &.item-tier-uncommon {
-    header {
+  &.tierUncommon {
+    .header {
       background: rgba(47, 107, 60, 0.9);
       color: #F5F5F5;
+    }
+  }
+
+  .details {
+    background: rgba(30, 36, 43, 0.95);
+    color: rgba(245, 245, 245, 0.7);
+
+    .heroStat {
+      @include clearfix;
+
+      position: relative;
+      border-bottom: 1px solid rgba(245, 245, 245, 0.1);
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+
+      .primaryStat,
+      .damageType {
+        display: inline-block;
+      }
+
+      .damageType {
+        margin-right: 5px;
+        border-radius: 25px;
+        width: 45px;
+        height: 45px;
+        text-align: center;
+        background-color: #000000;
+        background-size: 90%;
+        background-repeat: no-repeat;
+        background-position: center center;
+
+        img {
+          vertical-align: initial;
+          margin-top: 5px;
+        }
+      }
+
+      &.damageTypeArc {
+        color: #85C5EC;
+
+        .damageType {
+          background-color: #85C5EC;
+        }
+      }
+
+      &.damageTypeSolar {
+        color: #F2721B;
+
+        .damageType {
+          background-color: #F2721B;
+        }
+      }
+
+      &.damageTypeVoid {
+        color: #B283CC;
+
+        .damageType {
+          background-color: #B283CC;
+        }
+      }
+    }
+
+    .stat {
+      font-size: 2.5em;
+      line-height: 1;
+      font-weight: bold;
+    }
+
+    .statName {
+      font-size: 0.9em;
+      text-transform: uppercase;
+    }
+
+    .description {
+      font-style: italic;
     }
   }
 }
