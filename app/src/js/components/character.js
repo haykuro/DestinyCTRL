@@ -6,7 +6,17 @@ define([
 
       constructor : function(character){
         var _self = this;
-        m.startComputation();
+        _self.set({
+          level : 0,
+          banner : '',
+          emblem : '',
+          class : '',
+          race : '',
+          gender : '',
+          equipment : [],
+          inventory : []
+        }, true);
+
         character.sync().then(function(){
           _self.set({
             level : character.level,
@@ -28,9 +38,8 @@ define([
               return new ItemComponent(item, true);
             }));
           }
-          m.endComputation();
-        }).catch(function(err) {
-          m.endComputation();
+          m.redraw.strategy('diff');
+          m.redraw();
         });
       },
 
