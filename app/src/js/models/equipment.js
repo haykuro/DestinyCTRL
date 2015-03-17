@@ -26,6 +26,9 @@ define([
     this.primaryStatId = null;
     this.talentGrid = [];
     this.damage = false;
+    this.isEquipped = repo.isEquipped;
+    this.canEquip = repo.isEquipped;
+    this.cannotEquipReason = repo.cannotEquipReason;
 
     if(repo.stats) {
       this._fillStats(definitions, repo.stats);

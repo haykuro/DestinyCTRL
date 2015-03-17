@@ -36,11 +36,19 @@ define([
     }, []);
   };
 
-  Character.prototype.getEquipment = function() {
+  Character.prototype.getEquipment = function(isEquipped) {
     return this.buckets.filter(function(bucket) {
       return equipmentBuckets.indexOf(bucket.type) > -1;
     }).reduce(function(memo, bucket) {
-      return memo.concat(bucket.getItems());
+      var items = bucket.getItems();
+
+      if(typeof isEquipped === 'boolean') {
+        items = items.filter(function(item) {
+          return item.isEquipped === isEquipped;
+        });
+      }
+
+      return memo.concat(items);
     }, []);
   };
 
