@@ -12,10 +12,9 @@ define([
             level : character.level,
             banner : character.background,
             emblem : character.emblem,
-            class : character.background,
-            race : character.background,
-            gender : character.emblem,
-            score : character.account.grimoire,
+            class : character.characterClass.name,
+            race : character.characterClass.type,
+            gender : character.characterClass.gender,
             equipment : [],
             inventory : character.getInventory()
           }, true);
@@ -52,10 +51,12 @@ define([
 
         return [
           m('div', {class: 'banner', style: 'background-image: url(' + this.get('banner') + ');'}, [
-            m('div', {class: 'emblem', style: 'background-image: url(' + this.get('emblem') + ');'}),
+            //m('div', {class: 'emblem', style: 'background-image: url(' + this.get('emblem') + ');'}),
+            m('img', {class: 'emblem', src: this.get('emblem')}),
             m('div', {class: 'details'}, [
+              m('div', {class: 'class'}, this.get('class')),
+              m('div', {class: 'race'}, this.get('race') + '' + this.get('gender')),
               m('div', {class: 'level'}, this.get('level')),
-              m('div', {class: 'grimoire'}, this.get('score')),
             ])
           ]),
           m('ul.items', equipmentViews)
