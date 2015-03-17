@@ -81,12 +81,10 @@ body {
 }
 
 .itemTooltip {
-  padding: 10px;
-
   .header, .details {
     @include clearfix;
 
-    padding: 5px;
+    padding: 10px;
   }
 
   .header {
@@ -250,7 +248,7 @@ body {
 
         tr {
           td {
-            padding-top: 5px;
+            padding-top: 3px;
           }
 
           &:first-child {
