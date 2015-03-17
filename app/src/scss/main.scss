@@ -279,3 +279,17 @@ body {
     }
   }
 }
+
+/**
+ * Tooltips
+ */
+
+.awesome-tooltip {
+  opacity: 0;
+
+  transition: opacity .1s ease-in;
+
+  &.visible {
+    opacity: 1
+  }
+}
