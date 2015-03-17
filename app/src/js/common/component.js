@@ -10,10 +10,10 @@ define([
       return this;
     },
 
-    attach : function(selecter) {
+    attach : function(selector) {
       var self = this;
-      var el = typeof selecter === 'string' ?
-        document.querySelector(selecter) :
+      var el = typeof selector === 'string' ?
+        document.querySelector(selector) :
         selector;
 
       m.module(el, {
