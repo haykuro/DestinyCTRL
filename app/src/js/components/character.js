@@ -11,8 +11,11 @@ define([
 
           _self.set({
             level : character.level,
-            bg : character.background,
+            banner : character.background,
             emblem : character.emblem,
+            class : character.background,
+            race : character.background,
+            gender : character.emblem,
             score : character.account.grimoire,
             equipment : [],
             inventory : character.getInventory()
@@ -47,11 +50,13 @@ define([
         });
 
         return [
-        //  m("h1", this.get('title')),
-          m("img", {src: this.get('emblem')}),
-          m("img", {src: this.get('bg')}),
-          m("p", this.get('level')),
-          m("p", this.get('score')),
+          m('div', {class: 'banner', style: 'background-image: url(' + this.get('banner') + ');'}, [
+            m('div', {class: 'emblem', style: 'background-image: url(' + this.get('emblem') + ');'}),
+            m('div', {class: 'details'}, [
+              m('div', {class: 'level'}, this.get('level')),
+              m('div', {class: 'grimoire'}, this.get('score')),
+            ])
+          ]),
           m('ul.items', equipmentViews)
 
         ];
