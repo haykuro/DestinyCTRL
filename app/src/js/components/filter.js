@@ -31,7 +31,7 @@ define([
     view : function() {
       var self = this;
 
-      return m('input#vault-filter[type=text]', {
+      return m('input#vault-filter[type=text].form-control', {
         placeholder : 'e.g. is:primary is:kinetic',
         config : function(el, redraw) {
           if(! redraw) {
