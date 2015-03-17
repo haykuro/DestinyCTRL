@@ -11,14 +11,14 @@ define([
     },
 
     attach : function(selecter) {
-      var _self = this;
+      var self = this;
 
-      m.module($(selecter)[0], {
+      m.module(document.querySelector(selecter), {
         controller : function() {
-          return _self.controller.apply(_self, arguments);
+          return self.controller.apply(self, arguments);
         },
         view : function() {
-          return _self.view.apply(_self, arguments);
+          return self.view.apply(self, arguments);
         }
       });
     }
