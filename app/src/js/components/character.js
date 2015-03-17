@@ -13,12 +13,12 @@ define([
             level : character.level,
             bg : character.background,
             emblem : character.emblem,
-            score : character._account.grimoire,
+            score : character.account.grimoire,
             equipment : [],
             inventory : character.getInventory()
           }, true);
 
-          var equipments = character.getEquipment();
+          var equipments = character.getInventory();
 
           if(equipments.length) {
             _self.set('equipment', equipments.reduce(function(memo, equipment) {
