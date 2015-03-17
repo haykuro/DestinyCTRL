@@ -12,8 +12,11 @@ define([
 
     attach : function(selecter) {
       var self = this;
+      var el = typeof selecter === 'string' ?
+        document.querySelector(selecter) :
+        selector;
 
-      m.module(document.querySelector(selecter), {
+      m.module(el, {
         controller : function() {
           return self.controller.apply(self, arguments);
         },
