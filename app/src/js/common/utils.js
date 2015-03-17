@@ -92,7 +92,7 @@ define(function() {
           exec();
         }, wait);
       }
-    }
+    };
   };
 
   return Util;
