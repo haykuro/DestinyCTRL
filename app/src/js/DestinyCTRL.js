@@ -32,7 +32,7 @@ require([
             var character = new CharacterComp(cModel);
             var charNode = document.createElement('div');
 
-            charNode.id = cModel.id;
+            charNode.id = 'c_' + cModel.id;
             charNode.className = 'character';
 
             character.attach(charNode);

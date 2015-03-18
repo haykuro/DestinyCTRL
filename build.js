@@ -29,17 +29,6 @@
   preserveLicenseComments : false,
   include : [
     'DestinyCTRL',
-    'common/api',
-    'common/bungie',
-    'common/utils',
-    'common/authorizer',
-    'common/tooltip',
-    'models/account',
-    'models/character',
-    'models/vault',
-    'models/bucket',
-    'models/item',
-    'models/equipment',
     'components/vault',
     'components/character',
     'components/filter'
