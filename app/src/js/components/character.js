@@ -30,7 +30,7 @@ define([
           }, true);
 
           var equipments = character.getEquipment(true);
-          var inventory = character.getInventory();
+          var inventory = character.getCache(false);
 
           if(equipments.length) {
             _self.set('equipment', equipments.reduce(function(memo, equipment) {
@@ -87,9 +87,11 @@ define([
             ])
           ]),
           m('div', {class: 'equipped'},[
+            m('div', {class: 'section'}, 'Equipped'),
             m('ul.items', equipmentViews)
           ]),
           m('div', {class: 'inventory'},[
+            m('div', {class: 'section'}, 'Inventory'),
             m('ul.items', inventoryViews)
           ])
 
