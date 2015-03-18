@@ -1,8 +1,6 @@
 require([
   'common/bungie'
 ], function(Bungie) {
-  var _self = this;
-
   Bungie.authorize('psn').then(function() {
     require([
       'components/vault',
