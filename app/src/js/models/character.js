@@ -180,6 +180,7 @@ define([
       var definitions = resp.definitions;
 
       self.level = repo.characterLevel;
+      self.isPrestige = repo.isPrestigeLevel;
       self.emblem = 'https://www.bungie.net/' +
         repo.emblemPath.replace(/^\//, '');
       self.background = 'https://www.bungie.net/' +
