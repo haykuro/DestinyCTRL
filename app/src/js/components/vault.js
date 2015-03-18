@@ -29,6 +29,7 @@ define([
       });
 
       return [
+        m('div', {class: 'section'}, 'Vault'),
         m('ul.items', itemViews)
       ];
     },

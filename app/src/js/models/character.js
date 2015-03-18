@@ -13,6 +13,16 @@ define([
     'BUCKET_SHADER', 'BUCKET_EMBLEM'
   ];
 
+  var itemsBuckets = [
+    'BUCKET_BUILD','BUCKET_PRIMARY_WEAPON',
+    'BUCKET_SPECIAL_WEAPON','BUCKET_HEAVY_WEAPON',
+    'BUCKET_HEAD','BUCKET_ARMS',
+    'BUCKET_CHEST', 'BUCKET_LEGS',
+    'BUCKET_CLASS_ITEMS', 'BUCKET_GHOST',
+    'BUCKET_VEHICLE', 'BUCKET_SHIP',
+    'BUCKET_SHADER', 'BUCKET_EMBLEM'
+  ];
+
   function Character(account, data) {
     this.account = account;
 
@@ -33,6 +43,22 @@ define([
   Character.prototype.getInventory = function() {
     return this.buckets.reduce(function(memo, bucket) {
       return memo.concat(bucket.getItems());
+    }, []);
+  };
+
+  Character.prototype.getCache = function(isEquipped) {
+    return this.buckets.filter(function(bucket) {
+      return itemsBuckets.indexOf(bucket.type) > -1;
+    }).reduce(function(memo, bucket) {
+      var items = bucket.getItems();
+
+      if(typeof isEquipped === 'boolean') {
+        items = items.filter(function(item) {
+          return item.isEquipped === isEquipped;
+        });
+      }
+
+      return memo.concat(items);
     }, []);
   };
 
