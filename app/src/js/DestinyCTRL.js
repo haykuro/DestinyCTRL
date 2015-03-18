@@ -29,6 +29,7 @@ require([
         for(var i = 0; i < characters.length; i++) {
           var element = document.createElement('div');
           element.id = 'char' + i;
+          element.className = 'character';
           var character = new Character(characters[i]);
           allCharacters.appendChild(element);
           character.attach(element);
