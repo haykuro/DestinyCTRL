@@ -5,20 +5,15 @@ define([
     return Component.subclass({
 
       constructor : function(character){
-        var _self = this;
-        _self.set({
-          level : 0,
-          banner : '',
-          emblem : '',
-          class : '',
-          race : '',
-          gender : '',
-          equipment : [],
-          inventory : []
+        this.set({
+          initialized : false
         }, true);
 
+        var self = this;
+
         character.sync().then(function(){
-          _self.set({
+          self.set({
+            initialized : true,
             level : character.level,
             banner : character.background,
             emblem : character.emblem,
@@ -27,13 +22,13 @@ define([
             gender : character.characterClass.gender,
             equipment : [],
             inventory : []
-          }, true);
+          });
 
           var equipments = character.getEquipment(true);
           var inventory = character.getCache(false);
 
           if(equipments.length) {
-            _self.set('equipment', equipments.reduce(function(memo, equipment) {
+            self.set('equipment', equipments.reduce(function(memo, equipment) {
               return memo.concat(equipment);
             }, []).map(function(item) {
               return new ItemComponent(item, true);
@@ -41,7 +36,7 @@ define([
           }
 
           if(inventory.length) {
-            _self.set('inventory', inventory.reduce(function(memo, inventory) {
+            self.set('inventory', inventory.reduce(function(memo, inventory) {
               return memo.concat(inventory);
             }, []).map(function(item) {
               return new ItemComponent(item, true);
@@ -66,7 +61,10 @@ define([
       },
 
       view : function() {
-        var self = this;
+        if(! this.get('initialized')) {
+          return void 0;
+        }
+
         var equipment = this.getEquipmentItems();
         var equipmentViews = equipment.map(function(item) {
           return item.view();
@@ -78,24 +76,31 @@ define([
         });
 
         return [
-          m('div', {class: 'banner', style: 'background-image: url(' + this.get('banner') + ');'}, [
-            m('img', {class: 'emblem', src: this.get('emblem')}),
-            m('div', {class: 'details'}, [
-              m('div', {class: 'class'}, this.get('class')),
-              m('div', {class: 'race'}, this.get('race') + '' + this.get('gender')),
-              m('div', {class: 'level'}, this.get('level')),
+          m('div', {
+            className : 'banner',
+            style : {
+              backgroundImage : 'url(' + this.get('banner') + ')'
+            }
+          }, [
+            m('img', {
+              className : 'emblem',
+              src : this.get('emblem')
+            }),
+            m('div', { className : 'details' }, [
+              m('div', { className : 'class' }, this.get('class')),
+              m('div', { className : 'race' },
+                this.get('race') + '' + this.get('gender')),
+              m('div', { className : 'level' }, this.get('level')),
             ])
           ]),
-          m('div', {class: 'equipped'},[
-            m('div', {class: 'section'}, 'Equipped'),
+          m('div', { className : 'equipped' },[
+            m('div', { className : 'section' }, 'Equipped'),
             m('ul.items', equipmentViews)
           ]),
-          m('div', {class: 'inventory'},[
-            m('div', {class: 'section'}, 'Inventory'),
+          m('div', { className : 'inventory' }, [
+            m('div', { className : 'section' }, 'Inventory'),
             m('ul.items', inventoryViews)
           ])
-
-
         ];
       }
 
