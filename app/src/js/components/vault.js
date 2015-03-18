@@ -7,7 +7,6 @@ define([
   return Component.subclass({
     constructor : function(vault) {
       this.set({
-        title : 'Vault',
         items : []
       }, true);
 
@@ -30,7 +29,6 @@ define([
       });
 
       return [
-        m("h1", this.get('title')),
         m('ul.items', itemViews)
       ];
     },
