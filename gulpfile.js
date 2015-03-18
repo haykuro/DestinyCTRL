@@ -28,19 +28,19 @@ var del = require('del');
 
 gulp.task('default', ['build']);
 
-gulp.task('build', ['clean', 'build:style', 'build:app']);
+gulp.task('build', ['build:style', 'build:app']);
 
 gulp.task('clean', function (cb) {
   del(['app/dist/**'], cb);
 });
 
-gulp.task('build:style', ['clean'], function () {
+gulp.task('build:style', function () {
   return sass('app/src/scss/main.scss', {
     style: 'compressed'
   }).pipe(gulp.dest('app/dist/css'));
 });
 
-gulp.task('build:app', ['clean', 'vendor:js'], function(cb) {
+gulp.task('build:app', ['vendor:js'], function(cb) {
   spawn('./node_modules/.bin/r.js', ['-o', 'build.js'], {
     stdio : 'inherit'
   }).on('close', function(code) {
@@ -48,7 +48,7 @@ gulp.task('build:app', ['clean', 'vendor:js'], function(cb) {
   });
 });
 
-gulp.task('vendor:js', ['clean'], function() {
+gulp.task('vendor:js', function() {
   return gulp.src([
     'app/src/js/vendor/**/*.js',
     '!app/src/js/vendor/stapes.js'
