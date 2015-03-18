@@ -22,30 +22,35 @@
 
 var spawn = require('child_process').spawn;
 var gulp = require('gulp');
-var watch = require('gulp-watch');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-ruby-sass');
+var del = require('del');
 
 gulp.task('build', [
+  'clean',
   'build:style',
   'build:app'
 ]);
 
-gulp.task('build:style', function () {
+gulp.task('clean', function (cb) {
+  del(['app/dist/**'], cb);
+});
+
+gulp.task('build:style', ['clean'], function () {
   return sass('app/src/scss/main.scss', {
     style: 'compressed'
   }).pipe(gulp.dest('app/dist/css'));
 });
 
-gulp.task('build:app', ['vendor:js'], function(done) {
+gulp.task('build:app', ['clean', 'vendor:js'], function(cb) {
   spawn('./node_modules/.bin/r.js', ['-o', 'build.js'], {
     stdio : 'inherit'
   }).on('close', function(code) {
-    done();
+    cb();
   });
 });
 
-gulp.task('vendor:js', function() {
+gulp.task('vendor:js', ['clean'], function() {
   return gulp.src([
     'app/src/js/vendor/**/*.js',
     '!app/src/js/vendor/stapes.js'
@@ -53,13 +58,6 @@ gulp.task('vendor:js', function() {
 });
 
 gulp.task('watch', ['build'], function() {
-  watch('app/src/js/**/*.js', function(file) {
-    if(file.relative !== 'vendor/almond.js') {
-      gulp.start('build:app');
-    }
-  });
-
-  watch('app/src/scss/**/*.scss', function () {
-      gulp.start('build:style');
-  });
+  gulp.watch(['app/src/js/!(vendor)/**/*.js'], ['build:app']);
+  gulp.watch('app/src/scss/**/*.scss', ['build:style']);
 });
