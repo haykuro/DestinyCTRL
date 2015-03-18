@@ -187,11 +187,16 @@ define([
 
       var classHash = repo.characterBase.classHash;
       var classDef = definitions.classes[classHash];
+      var raceHash = repo.characterBase.raceHash;
+      var raceDef = definitions.races[raceHash];
+      var genderHash = repo.characterBase.genderHash;
+      var genderDef = definitions.genders[genderHash];
 
       self.characterClass = {
         type : repo.characterBase.classType,
         name : classDef.className,
-        gender : repo.characterBase.genderType
+        gender : genderDef.genderName,
+        race : raceDef.raceName
       };
     });
   };
