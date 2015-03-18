@@ -119,7 +119,8 @@ define([
       var type = this.get('type');
       var tier = this.get('tier');
       var tierName = tier.name;
-      var hasStats = this.item.isWeapon() || this.item.isArmor();
+      var hasStats = this.get('stats') &&
+        (this.item.isWeapon() || this.item.isArmor());
       var hasDetails = description || hasStats;
 
       return m('div.item', {
