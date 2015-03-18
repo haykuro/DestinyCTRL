@@ -26,11 +26,9 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-ruby-sass');
 var del = require('del');
 
-gulp.task('build', [
-  'clean',
-  'build:style',
-  'build:app'
-]);
+gulp.task('default', ['build']);
+
+gulp.task('build', ['clean', 'build:style', 'build:app']);
 
 gulp.task('clean', function (cb) {
   del(['app/dist/**'], cb);
