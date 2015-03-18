@@ -8,32 +8,38 @@ require([
       'components/vault',
       'components/filter',
       'components/character'
-    ], function(Vault, Filter, Character) {
-      var filter = new Filter();
-
-      filter.attach('#filter');
-
+    ], function(VaultComp, FilterComp, CharacterComp) {
+      var filterComp = new FilterComp();
       var accounts = Bungie.getAccounts();
 
+      filterComp.attach('#filter');
+
       if(accounts.length) {
-        accounts[0].getVault().then(function(vault) {
-          var vault = new Vault(vault);
+        var account = accounts[0];
 
-          vault.attach('#vault');
+        account.getVault().then(function(vault) {
+          var vaultComp = new VaultComp(vault);
 
-          filter.addComponent(vault);
+          vaultComp.attach('#vault');
+
+          filterComp.addComponent(vault);
         });
 
-        var characters = accounts[0].getCharacters();
-        var allCharacters = document.getElementById('characters');
-        for(var i = 0; i < characters.length; i++) {
-          var element = document.createElement('div');
-          element.id = 'char' + i;
-          var character = new Character(characters[i]);
-          allCharacters.appendChild(element);
-          character.attach(element);
-        }
+        var charactersNode = document.querySelector('#characters');
 
+        if(charactersNode) {
+          account.getCharacters().forEach(function(cModel) {
+            var character = new CharacterComp(cModel);
+            var charNode = document.createElement('div');
+
+            charNode.id = cModel.id;
+            charNode.className = 'character';
+
+            character.attach(charNode);
+
+            charactersNode.appendChild(charNode);
+          });
+        }
       }
     });
   }).catch(function(err) {
