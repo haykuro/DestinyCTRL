@@ -7,18 +7,18 @@ define([
   API.base = 'https://www.bungie.net/Platform';
 
   API.requestWithToken = function() {
-    var _self = this;
-    var _args = [].slice.call(arguments);
+    var self = this;
+    var args = [].slice.call(arguments);
 
     return new Promise(function(resolve, reject) {
       _.getCookie('bungled').then(function(csrfToken) {
         var _deleteCSRF = function() {
-          delete _self._csrf;
+          delete self._csrf;
         };
 
-        _self._csrf = csrfToken;
+        self._csrf = csrfToken;
 
-        API.request.apply(_self, _args)
+        API.request.apply(self, args)
           .then(resolve)
           .then(_deleteCSRF)
           .catch(reject);
@@ -27,7 +27,7 @@ define([
   };
 
   API.request = function(method, endpoint, params, payload) {
-    var _self = this;
+    var self = this;
 
     return new Promise(function(resolve, reject) {
       var xhr = new XMLHttpRequest();
@@ -62,10 +62,10 @@ define([
 
       xhr.open(method, url, true);
 
-      if(_self._csrf) {
+      if(self._csrf) {
         xhr.withCredentials = true;
 
-        xhr.setRequestHeader('X-CSRF', _self._csrf);
+        xhr.setRequestHeader('X-CSRF', self._csrf);
       }
 
       xhr.setRequestHeader('X-API-Key', API.key);
