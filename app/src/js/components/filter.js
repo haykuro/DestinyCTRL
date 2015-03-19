@@ -16,7 +16,7 @@ define([
     'material', 'consumable'
   ];
 
-  return Component.subclass({
+  var FilterComp = Component.subclass({
     constructor : function() {
       this.set({
         components : [],
@@ -89,18 +89,58 @@ define([
       });
     },
 
-    addComponent : function(component) {
+    updateItemCache : function() {
+      var components = this.get('components');
+      var itemCache = {};
+
+      components.forEach(function(component) {
+        var fId = component.get('__filterId');
+        var map = component.get('__filterMap');
+
+        if(typeof map.get === 'string') {
+          itemCache[fId] = component[map.get]() || [];
+        } else if(typeof map.get === 'function') {
+          itemCache[fId] = map.get() || [];
+        }
+
+        this.set('itemCache', itemCache);
+      }, this);
+    },
+
+    addComponent : function(component, mapping) {
       if(component instanceof Component) {
+        if(component.has('__filterId')) {
+          return;
+        }
+
+        mapping = mapping || {};
+
         var components = this.get('components') || [];
         var itemCache = this.get('itemCache') || {};
         var filterId = components.push(component);
+        var filterMap = {
+          set : mapping.set || 'setItems',
+          get : mapping.get || 'getItems'
+        };
 
-        component.set('__filter', filterId);
+        if(typeof filterMap.get === 'string' &&
+           typeof component[filterMap.get] !== 'function'
+        ) {
+          throw new Error('Invalid item getter.');
+        }
 
-        itemCache[filterId] = component.getItems();
+        if(typeof filterMap.set === 'string' &&
+           typeof component[filterMap.set] !== 'function'
+        ) {
+          throw new Error('Invalid item setter.');
+        }
+
+        component.set('__filterId', filterId);
+        component.set('__filterMap', filterMap);
 
         this.set('components', components);
-        this.set('itemCache', itemCache);
+
+        this.updateItemCache();
       }
     },
 
@@ -110,7 +150,8 @@ define([
       var itemCache = this.get('itemCache') || {};
 
       components.forEach(function(component) {
-        var filterId = component.get('__filter') || -1;
+        var map = component.get('__filterMap');
+        var filterId = component.get('__filterId') || -1;
         var items = filterId > -1 && itemCache.hasOwnProperty(filterId) ?
           itemCache[filterId] :
           [];
@@ -194,9 +235,15 @@ define([
             }
           });
 
-          component.setItems(filtered);
+          if(typeof map.set === 'string') {
+            component[map.set](filtered);
+          } else if(typeof map.set === 'function') {
+            map.set(filtered);
+          }
         }
       });
     }
   });
+
+  return new FilterComp();
 });
