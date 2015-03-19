@@ -34,6 +34,16 @@ require([
             charactersNode.appendChild(charNode);
           });
         }
+
+        var toggleVault = document.querySelector('.js-vault');
+        var vaultTab = document.querySelector('.sidebar');
+        toggleVault.addEventListener('click', function(){
+          vaultTab.style.display = vaultTab.style.display === ''||
+                                    vaultTab.style.display == 'none' ?
+                                    'block' : vaultTab.style.display == 'block' ?
+                                    'none' : 'block';
+        });
+
       }
     });
   }).catch(function(err) {

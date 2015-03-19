@@ -1,12 +1,13 @@
 .sidebar {
     position: fixed;
-    max-width: 200px;
+    width: 200px;
     top: 51px;
     bottom: 0;
     right: 0;
     z-index: 1000;
     display: block;
     padding: 20px;
+    display: none;
     //overflow: hidden;
     background-color: #444;
     border-right: 1px solid #eee;
