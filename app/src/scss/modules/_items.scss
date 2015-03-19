@@ -26,6 +26,8 @@
     }
   }
 
+  transition: opacity .1s ease-in;
+
   &.dimmed {
     opacity: 0.2;
   }
