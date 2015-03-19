@@ -29,115 +29,117 @@ define(function() {
     }).join(' ');
   }
 
-  function Tooltip(target, content, delay) {
-    var self = this;
+  return (function() {
+    function Tooltip(target, content, delay) {
+      var self = this;
 
-    this.delay = delay || 250;
-    this.target = target;
-    this.content = content.cloneNode(true);
+      this.delay = delay || 250;
+      this.target = target;
+      this.content = content;
 
-    target.addEventListener('mouseover', function(evt) {
-      evt.stopPropagation();
-
-      self.updatePosition(evt.x, evt.y);
-      self.showTooltip();
-    }, true);
-
-    target.addEventListener('mousemove', function(evt) {
-      evt.stopPropagation();
-
-      self.updatePosition(evt.x, evt.y);
-    }, true);
-
-    target.addEventListener('mouseout', function(evt) {
-      evt.stopPropagation();
-
-      self.updatePosition(evt.x, evt.y);
-      self.hideTooltip();
-    }, true);
-  }
-
-  Tooltip.prototype.updatePosition = function(x, y) {
-    var tooltip = this.getTooltip();
-    var gap = 15;
-    var xDelta = window.scrollX + x + gap;
-    var yDelta = window.scrollY + y - (tooltip.offsetHeight / 2);
-    var topEdge = yDelta - gap;
-    var bottomEdge = (yDelta + gap) + tooltip.offsetHeight;
-    var leftEdge = xDelta - gap;
-    var rightEdge = (xDelta + gap) + tooltip.offsetWidth;
-
-    if(rightEdge > document.body.offsetWidth) {
-      xDelta -= rightEdge - document.body.offsetWidth;
-    } else if(leftEdge < 0) {
-      xDelta -= leftEdge;
-    }
-
-    if(document.body.offsetHeight > tooltip.offsetHeight) {
-      var offCanvasTop = topEdge < 0;
-      var offCanvasBottom = bottomEdge > document.body.offsetHeight;
-
-      if(offCanvasTop) {
-        yDelta -= topEdge;
-      } else if(offCanvasBottom) {
-        yDelta -= bottomEdge - document.body.offsetHeight;
+      if(content.parentNode) {
+        content.parentNode.removeChild(content);
       }
+
+      target.addEventListener('mouseenter', function(evt) {
+        self.updatePosition(evt.x, evt.y);
+        self.showTooltip();
+      });
+
+      target.addEventListener('mousemove', function(evt) {
+        self.updatePosition(evt.x, evt.y);
+      });
+
+      target.addEventListener('mouseleave', function(evt) {
+        self.updatePosition(evt.x, evt.y);
+        self.hideTooltip();
+      });
     }
 
-    tooltip.style.top = yDelta + 'px';
-    tooltip.style.left = xDelta + 'px';
-  };
+    Tooltip.prototype.updatePosition = function(x, y) {
+      var tooltip = this.getTooltip();
+      var gap = 15;
+      var xDelta = window.scrollX + x + gap;
+      var yDelta = window.scrollY + y - (tooltip.offsetHeight / 2);
+      var topEdge = yDelta - gap;
+      var bottomEdge = (yDelta + gap) + tooltip.offsetHeight;
+      var leftEdge = xDelta - gap;
+      var rightEdge = (xDelta + gap) + tooltip.offsetWidth;
 
-  Tooltip.prototype.showTooltip = function() {
-    this.clearTimer();
+      if(rightEdge > document.body.offsetWidth) {
+        xDelta -= rightEdge - document.body.offsetWidth;
+      } else if(leftEdge < 0) {
+        xDelta -= leftEdge;
+      }
 
-    var tooltip = this.getTooltip();
+      if(document.body.offsetHeight > tooltip.offsetHeight) {
+        var offCanvasTop = topEdge < 0;
+        var offCanvasBottom = bottomEdge > document.body.offsetHeight;
 
-    document.body.appendChild(tooltip);
+        if(offCanvasTop) {
+          yDelta -= topEdge;
+        } else if(offCanvasBottom) {
+          yDelta -= bottomEdge - document.body.offsetHeight;
+        }
+      }
 
-    if(! hasClass(tooltip, 'visible')) {
+      tooltip.style.top = yDelta + 'px';
+      tooltip.style.left = xDelta + 'px';
+    };
+
+    Tooltip.prototype.showTooltip = function() {
+      this.clearTimer();
+
+      var tooltip = this.getTooltip();
+
+      document.body.appendChild(tooltip);
+
+      if(! hasClass(tooltip, 'visible')) {
+        this.timer = setTimeout(function() {
+          addClass(tooltip, 'visible');
+        }, this.delay);
+      }
+    };
+
+    Tooltip.prototype.hideTooltip = function() {
+      this.clearTimer();
+
+      var tooltip = this.getTooltip();
+
+      removeClass(tooltip, 'visible');
+
       this.timer = setTimeout(function() {
-        addClass(tooltip, 'visible');
+        tooltip.parentNode.removeChild(tooltip);
       }, this.delay);
-    }
-  };
+    };
 
-  Tooltip.prototype.hideTooltip = function() {
-    this.clearTimer();
+    Tooltip.prototype.clearTimer = function() {
+      if(this.timer) {
+        clearTimeout(this.timer);
 
-    var tooltip = this.getTooltip();
+        delete this.timer;
+      }
+    };
 
-    removeClass(tooltip, 'visible');
+    Tooltip.prototype.getTooltip = function() {
+      if(! this.cachedTooltip) {
+        var tooltip = document.createElement('div');
 
-    tooltip.parentNode.removeChild(tooltip);
-  };
+        tooltip.appendChild(this.content.cloneNode(true));
 
-  Tooltip.prototype.clearTimer = function() {
-    if(this.timer) {
-      clearTimeout(this.timer);
+        tooltip.className = 'awesome-tooltip';
+        tooltip.style.position = 'absolute';
+        tooltip.style.top = 0;
+        tooltip.style.left = 0;
+        tooltip.style.width = 250;
+        tooltip.style.pointerEvents = 'none';
 
-      delete this.timer;
-    }
-  };
+        this.cachedTooltip = tooltip;
+      }
 
-  Tooltip.prototype.getTooltip = function() {
-    if(! this.cachedTooltip) {
-      var tooltip = document.createElement('div');
-
-      tooltip.appendChild(this.content);
-
-      tooltip.className = 'awesome-tooltip';
-      tooltip.style.position = 'absolute';
-      tooltip.style.top = 0;
-      tooltip.style.left = 0;
-      tooltip.style.width = 250;
-      tooltip.style.pointerEvents = 'none';
-
-      this.cachedTooltip = tooltip;
+      return this.cachedTooltip;
     }
 
-    return this.cachedTooltip;
-  };
-
-  return Tooltip;
+    return Tooltip;
+  }());
 });
