@@ -16,8 +16,20 @@ define([
             return self.get('inventory') || [];
           },
 
-          set : function(items) {
-            self.set('inventory', items);
+          set : function(filtered, all) {
+            if(filtered.length !== all.length) {
+              all.forEach(function(item) {
+                item.setDimming(true);
+              });
+
+              filtered.forEach(function(item) {
+                item.setDimming(false);
+              });
+            } else {
+              all.forEach(function(item) {
+                item.setDimming(false);
+              });
+            }
           }
         });
 
