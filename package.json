@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "del": "^1.1.1",
+    "docker": "^0.2.14",
     "gulp": "^3.8.11",
     "gulp-ruby-sass": "^1.0.0-alpha.3",
     "gulp-uglify": "^1.1.0",
