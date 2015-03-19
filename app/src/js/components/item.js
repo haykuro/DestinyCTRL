@@ -109,7 +109,7 @@ define([
             m('div.statName', primaryStat.name)
           ])
         ]);
-      };
+      }
     },
 
     view : function() {
