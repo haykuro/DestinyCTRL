@@ -112,6 +112,10 @@ define([
       }
     },
 
+    setDimming : function(dimming) {
+      this.dimmed = !! dimming;
+    },
+
     view : function() {
       var stackable = this.item.isStackable();
       var complete = this.item.isComplete();
@@ -122,8 +126,9 @@ define([
       var hasStats = this.get('stats') &&
         (this.item.isWeapon() || this.item.isArmor());
       var hasDetails = description || hasStats;
+      var dimmed = this.dimmed;
 
-      return m('div.item', {
+      return m('div.item' + (dimmed ? '.dimmed' : ''), {
         config : function(el, redraw) {
           if(! redraw) {
             new Tooltip(el, el.querySelector('.itemTooltip'), 100);

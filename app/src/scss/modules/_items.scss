@@ -26,6 +26,10 @@
     }
   }
 
+  &.dimmed {
+    opacity: 0.2;
+  }
+
   .stack {
     position: absolute;
     bottom: 0;

@@ -21,6 +21,28 @@ define([
           }
         });
 
+        FilterComp.addComponent(this, {
+          get : function() {
+            return self.get('equipment') || [];
+          },
+
+          set : function(filtered, all) {
+            if(filtered.length !== all.length) {
+              all.forEach(function(item) {
+                item.setDimming(true);
+              });
+
+              filtered.forEach(function(item) {
+                item.setDimming(false);
+              });
+            } else {
+              all.forEach(function(item) {
+                item.setDimming(false);
+              });
+            }
+          }
+        });
+
         character.sync().then(function(){
           self.set({
             initialized : true,
