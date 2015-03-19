@@ -143,13 +143,13 @@ define([
             ])
           ]),
           m('div', { className : 'row' },[
-            m('div', { className : 'col-md-4' },[
+            m('div', { className : 'col-md-2' },[
                 m('div', { className : 'equipped' },[
                   m('div', { className : 'section' }, 'Equipped'),
                   m('ul.items', equipmentViews)
                 ])
             ]),
-            m('div', { className : 'col-md-8' },[
+            m('div', { className : 'col-md-10' },[
                 m('div', { className : 'inventory' }, [
                   m('div', { className : 'section' }, 'Inventory'),
                   m('ul.items', inventoryViews)
