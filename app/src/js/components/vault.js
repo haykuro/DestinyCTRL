@@ -2,8 +2,9 @@ define([
   'common/bungie',
   'common/component',
   'components/item',
+  'components/filter',
   'common/utils'
-], function(Bungie, Component, ItemComponent, _) {
+], function(Bungie, Component, ItemComp, FilterComp, _) {
   return Component.subclass({
     constructor : function(vault) {
       this.set({
@@ -16,9 +17,11 @@ define([
         this.set('items', buckets.reduce(function(memo, bucket) {
           return memo.concat(bucket.getItems());
         }, []).map(function(item) {
-          return new ItemComponent(item, true);
+          return new ItemComp(item, true);
         }));
       }
+
+      FilterComp.addComponent(this);
     },
 
     view : function() {

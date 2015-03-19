@@ -1,15 +1,25 @@
 define([
   'common/component',
-  'components/item'
-], function(Component, ItemComponent) {
+  'components/item',
+  'components/filter'
+], function(Component, ItemComp, FilterComp) {
     return Component.subclass({
-
       constructor : function(character){
         this.set({
           initialized : false
         }, true);
 
         var self = this;
+
+        FilterComp.addComponent(this, {
+          get : function() {
+            return self.get('inventory') || [];
+          },
+
+          set : function(items) {
+            self.set('inventory', items);
+          }
+        });
 
         character.sync().then(function(){
           self.set({
@@ -31,7 +41,7 @@ define([
             self.set('equipment', equipments.reduce(function(memo, equipment) {
               return memo.concat(equipment);
             }, []).map(function(item) {
-              return new ItemComponent(item, true);
+              return new ItemComp(item, true);
             }));
           }
 
@@ -39,9 +49,11 @@ define([
             self.set('inventory', inventory.reduce(function(memo, inventory) {
               return memo.concat(inventory);
             }, []).map(function(item) {
-              return new ItemComponent(item, true);
+              return new ItemComp(item, true);
             }));
           }
+
+          FilterComp.updateItemCache();
 
           m.redraw.strategy('diff');
           m.redraw();
