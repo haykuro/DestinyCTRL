@@ -129,9 +129,9 @@ define([
       var dimmed = this.dimmed;
 
       return m('div.item' + (dimmed ? '.dimmed' : ''), {
-        config : function(el, redraw) {
+        config : function(el, redraw, ctx) {
           if(! redraw) {
-            new Tooltip(el, el.querySelector('.itemTooltip'), 100);
+            ctx.tooltip = new Tooltip(el, el.querySelector('.itemTooltip'), 100);
           }
         }
       }, [

@@ -177,9 +177,9 @@ define([
                 aggregate.push(item.item.isHeadArmor());
               } else if(filter.term === 'chest') {
                 aggregate.push(item.item.isChestArmor());
-              } else if(filter.term === 'arm') {
+              } else if(filter.term === 'arm' || filter.term === 'arms') {
                 aggregate.push(item.item.isArmArmor());
-              } else if(filter.term === 'leg') {
+              } else if(filter.term === 'leg' || filter.term === 'legs') {
                 aggregate.push(item.item.isLegArmor());
               } else if(filter.term === 'primary') {
                 aggregate.push(item.item.isPrimaryWeapon());
