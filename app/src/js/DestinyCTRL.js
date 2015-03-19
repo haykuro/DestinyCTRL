@@ -7,10 +7,9 @@ require([
       'components/filter',
       'components/character'
     ], function(VaultComp, FilterComp, CharacterComp) {
-      var filterComp = new FilterComp();
-      var accounts = Bungie.getAccounts();
+      FilterComp.attach('#filter');
 
-      filterComp.attach('#filter');
+      var accounts = Bungie.getAccounts();
 
       if(accounts.length) {
         var account = accounts[0];
@@ -19,22 +18,19 @@ require([
           var vaultComp = new VaultComp(vault);
 
           vaultComp.attach('#vault');
-
-          filterComp.addComponent(vaultComp);
         });
 
         var charactersNode = document.querySelector('#characters');
 
         if(charactersNode) {
           account.getCharacters().forEach(function(cModel) {
-            var character = new CharacterComp(cModel);
+            var characterComp = new CharacterComp(cModel);
             var charNode = document.createElement('div');
 
             charNode.id = 'c_' + cModel.id;
             charNode.className = 'character';
 
-            character.attach(charNode);
-
+            characterComp.attach(charNode);
             charactersNode.appendChild(charNode);
           });
         }
