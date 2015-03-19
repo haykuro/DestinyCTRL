@@ -20,7 +20,7 @@ require([
 
           vaultComp.attach('#vault');
 
-          filterComp.addComponent(vault);
+          filterComp.addComponent(vaultComp);
         });
 
         var charactersNode = document.querySelector('#characters');
