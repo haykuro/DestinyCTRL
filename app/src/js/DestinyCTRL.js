@@ -37,11 +37,13 @@ require([
 
         var toggleVault = document.querySelector('.js-vault');
         var vaultTab = document.querySelector('.sidebar');
-        toggleVault.addEventListener('click', function(){
-          vaultTab.style.display = vaultTab.style.display === ''||
-                                    vaultTab.style.display == 'none' ?
-                                    'block' : vaultTab.style.display == 'block' ?
-                                    'none' : 'block';
+
+        toggleVault.addEventListener('click', function() {
+          var computed = getComputedStyle(vaultTab);
+
+          vaultTab.style.display = computed.display === 'none' ?
+            'block' :
+            'none';
         });
 
       }
