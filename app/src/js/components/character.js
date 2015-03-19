@@ -25,10 +25,11 @@ define([
           self.set({
             initialized : true,
             level : character.level,
+            light : character.isPrestige,
             banner : character.background,
             emblem : character.emblem,
             class : character.characterClass.name,
-            race : character.characterClass.type,
+            race : character.characterClass.race,
             gender : character.characterClass.gender,
             equipment : [],
             inventory : []
@@ -77,6 +78,8 @@ define([
           return void 0;
         }
 
+        var light = (this.get('light') ? 'light' : '');
+
         var equipment = this.getEquipmentItems();
         var equipmentViews = equipment.map(function(item) {
           return item.view();
@@ -101,17 +104,23 @@ define([
             m('div', { className : 'details' }, [
               m('div', { className : 'class' }, this.get('class')),
               m('div', { className : 'race' },
-                this.get('race') + '' + this.get('gender')),
-              m('div', { className : 'level' }, this.get('level')),
+                this.get('race') + ' ' + this.get('gender')),
+              m('div', { className : 'level ' + light }, this.get('level')),
             ])
           ]),
-          m('div', { className : 'equipped' },[
-            m('div', { className : 'section' }, 'Equipped'),
-            m('ul.items', equipmentViews)
-          ]),
-          m('div', { className : 'inventory' }, [
-            m('div', { className : 'section' }, 'Inventory'),
-            m('ul.items', inventoryViews)
+          m('div', { className : 'row' },[
+            m('div', { className : 'col-md-4' },[
+                m('div', { className : 'equipped' },[
+                  m('div', { className : 'section' }, 'Equipped'),
+                  m('ul.items', equipmentViews)
+                ])
+            ]),
+            m('div', { className : 'col-md-8' },[
+                m('div', { className : 'inventory' }, [
+                  m('div', { className : 'section' }, 'Inventory'),
+                  m('ul.items', inventoryViews)
+                ])
+              ])
           ])
         ];
       }

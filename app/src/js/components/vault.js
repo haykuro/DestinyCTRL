@@ -32,8 +32,10 @@ define([
       });
 
       return [
-        m('div', {class: 'section'}, 'Vault'),
-        m('ul.items', itemViews)
+        //m('div', {class: 'section'}, 'Vault'),
+        m('div', {class: 'vault'}, [
+          m('ul.items', itemViews)
+        ])
       ];
     },
 

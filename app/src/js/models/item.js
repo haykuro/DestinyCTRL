@@ -7,7 +7,7 @@ define(function() {
     this.description = meta.itemDescription;
     this.icon = 'https://www.bungie.net/' + meta.icon.replace(/^\//, '');
     this.stackSize = repo.stackSize;
-    this.damageType = repo.damageType,
+    this.damageType = repo.damageType;
     this.gridComplete = repo.isGridComplete;
     this.tier = {
       type : meta.tierType, name : meta.tierTypeName
