@@ -47,7 +47,7 @@ define([
   };
 
   Character.prototype.getCache = function(isEquipped) {
-    var cache = this.buckets.filter(function(bucket) {
+    return this.buckets.filter(function(bucket) {
       return itemsBuckets.indexOf(bucket.type) > -1;
     }).reduce(function(memo, bucket) {
       var items = bucket.getItems();
@@ -60,22 +60,6 @@ define([
 
       return memo.concat(items);
     }, []);
-
-    return []
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .concat(cache)
-      .slice(0, Math.floor(Math.random() * 140) + 60);
   };
 
   Character.prototype.getEquipment = function(isEquipped) {
