@@ -40,7 +40,7 @@ define([
 
               m.redraw.strategy('diff');
               m.redraw();
-            }, 250));
+            }, 125));
           }
         }
       });
