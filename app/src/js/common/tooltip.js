@@ -41,18 +41,23 @@ define(function() {
         content.parentNode.removeChild(content);
       }
 
+      var update = function(evt) {
+        self.updatePosition(evt.x, evt.y);
+      };
+
       target.addEventListener('mouseenter', function(evt) {
+        document.addEventListener('mousemove', update);
+
         self.updatePosition(evt.x, evt.y);
         self.showTooltip();
       });
 
-      target.addEventListener('mousemove', function(evt) {
-        self.updatePosition(evt.x, evt.y);
-      });
-
       target.addEventListener('mouseleave', function(evt) {
-        self.updatePosition(evt.x, evt.y);
         self.hideTooltip();
+
+        setTimeout(function() {
+          document.removeEventListener('mousemove', update);
+        }, self.delay);
       });
     }
 
