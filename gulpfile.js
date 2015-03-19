@@ -56,6 +56,6 @@ gulp.task('vendor:js', function() {
 });
 
 gulp.task('watch', ['build'], function() {
-  gulp.watch(['app/src/js/!(vendor)/**/*.js'], ['build:app']);
+  gulp.watch(['app/src/js/**/*.js'], ['build:app']);
   gulp.watch('app/src/scss/**/*.scss', ['build:style']);
 });
