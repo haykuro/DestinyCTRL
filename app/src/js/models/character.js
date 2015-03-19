@@ -75,7 +75,7 @@ define([
       .concat(cache)
       .concat(cache)
       .concat(cache)
-      .slice(0, 140);
+      .slice(0, Math.floor(Math.random() * 140) + 60);
   };
 
   Character.prototype.getEquipment = function(isEquipped) {
