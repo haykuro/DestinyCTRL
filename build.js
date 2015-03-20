@@ -20,17 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 {
-  name : '../../../libs/almond',
-  wrap : true,
-  baseUrl : 'app/src/js',
-  out : 'app/dist/js/app.js',
-  optimize : 'none',
-  generateSourceMaps : true,
-  preserveLicenseComments : false,
-  include : [
-    'DestinyCTRL',
-    'components/vault',
-    'components/character',
-    'components/filter'
+  "name" : "../../../libs/almond",
+  "wrap" : true,
+  "baseUrl" : "app/src/js",
+  "out" : "app/dist/js/app.js",
+  "optimize" : "none",
+  "generateSourceMaps" : true,
+  "preserveLicenseComments" : false,
+  "include" : [
+    "DestinyCTRL",
+    "components/vault",
+    "components/filter",
+    "components/characters"
   ]
 }

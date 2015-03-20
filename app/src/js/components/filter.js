@@ -61,7 +61,9 @@ define([
   var FilterComp = Component.subclass({
     constructor : function() {
       this.set({
-        components : []
+        components : [],
+        search : '',
+        filtering : false
       }, true);
 
       this.on('change:search', this.filterComponents);
@@ -121,7 +123,7 @@ define([
         var valid = true;
 
         if(builtExpr.type === 'is') {
-          valid = validFilters.indexOf(builtExpr.term) > -1
+          valid = validFilters.indexOf(builtExpr.term) > -1;
         }
 
         return valid;
@@ -156,6 +158,8 @@ define([
     filterComponents : function(query) {
       var filters = this.parseFilters(query);
       var components = this.get('components') || [];
+
+      this.set('filtering', !! (query.length || filters.length));
 
       components.reduce(function(memo, component) {
         return memo.concat(component.get('__filters') || []);
