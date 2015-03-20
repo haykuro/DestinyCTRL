@@ -1,44 +1,76 @@
+.characters {
+  @include display(flex);
+  @include flex-wrap(wrap);
+  @include justify-content(space-between);
+}
+
 .character {
-  margin-bottom: 30px;
-}
-.banner {
-  width: 290px;
-  height: 43px;
-  background-size: cover;
-  background-repeat: no-repeat;
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-background-color: white !default;
+  $base-spacing: 1.5em !default;
+  $base-accent-color: #477DCA !default;
+  $base-link-color: $base-accent-color !default;
+  $dark-gray: #333 !default;
+  $base-font-color: $dark-gray !default;
+  $character-border-color: $base-border-color;
+  $character-border: 1px solid $character-border-color;
+  $character-background: lighten($character-border-color, 10%);
+  $character-header-background: $character-background;
+  $character-hover-background: lighten($character-background, 5%);
+  $character-image-background: #DBD199;
+  $character-image-hover-background: lighten($character-image-background, 5%);
+  $character-margin: 1em;
+
+  @include flex-basis(15em);
+  @include flex-grow(1);
+  @include transition (all 0.2s ease-in-out);
+
+  background-color: $character-background;
+  border-radius: $base-border-radius;
+  border: $character-border;
+  box-shadow: 0 2px 4px darken($base-background-color, 10%);
+  cursor: pointer;
+  margin: 0 $character-margin $base-spacing $character-margin;
   position: relative;
-  padding-left: 50px;
-}
-.emblem {
-  height: 39px;
-  width: 39px;
-  background-size: cover;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  background-repeat: no-repeat;
-}
-.details {
-  color: #fff;
-  .class {
-    position: absolute;
-    top: 4px;
+  position: relative;
+
+  .character-header {
+    @include transition (all 0.2s ease-in-out);
+    background-color: $character-header-background;
+    background-size: cover;
+    border-bottom: $character-border;
+    border-radius: $base-border-radius $base-border-radius 0 0;
+    font-weight: bold;
+    line-height: 1.5em;
+    padding: ($base-spacing / 3) ($base-spacing / 2);
+    height: 65px;
   }
-  .race {
-    position: absolute;
-    top: 20px;
+
+  .character-details {
+    font-size: 0.9em;
+    line-height: 1.5em;
+    padding: ($base-spacing / 2) ($base-spacing / 2);
+
+    p {
+      margin: 0 0 ($base-spacing / 2);
+    }
   }
-  .level {
-    position: absolute;
-    right: 7px;
-    font-size: 28px;
+
+  &:focus,
+  &:hover {
+    background-color: $character-hover-background;
+
+    .character-header {
+      background-color: $character-hover-background;
+    }
   }
-  .light { color: #EFDD56; }
-}
-.equipped,
-.inventory {
-  //width : 350px;
-}
-.equipped {
-  width: 120px;
+
+  &:active {
+    background-color: $character-background;
+
+    .character-header {
+      background-color: $character-background;
+    }
+  }
 }

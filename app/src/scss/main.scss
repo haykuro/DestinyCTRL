@@ -1,43 +1,13 @@
-/*
- * Vendor
- */
+@import "vendor/bourbon/bourbon";
+@import "vendor/neat/neat";
 
-@import 'vendor/bootstrap/bootstrap';
+html, body { margin: 0; }
+ul { margin: 0; padding: 0; }
 
-@mixin clearfix {
-  &:before,
-  &:after {
-      content: ' ';
-      display: table;
-  }
-
-  &:after {
-      clear: both;
-  }
+section {
+  @include outer-container;
 }
 
-body {
-    padding-top: 50px;
-}
-
-/*
- * Components
- */
-
-@import "components/header";
-@import "components/sidebar";
-@import "components/content";
-
-/*
- * Modules
- */
-
-@import "modules/items";
-@import "modules/tooltips";
-
-/*
- * Views
- */
-
+@import "views/tooltip";
+@import "views/item";
 @import "views/character";
-@import "views/vault";
