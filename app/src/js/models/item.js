@@ -9,9 +9,11 @@ define(function() {
     this.stackSize = repo.stackSize;
     this.damageType = repo.damageType;
     this.gridComplete = repo.isGridComplete;
+
     this.tier = {
       type : meta.tierType, name : meta.tierTypeName
     };
+
     this.type = {
       name : meta.itemTypeName,
       bucket : definitions.buckets[meta.bucketTypeHash].bucketIdentifier
