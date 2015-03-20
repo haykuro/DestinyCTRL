@@ -24,6 +24,17 @@ require([
         var charactersComp = new CharactersComp(characters);
 
         charactersComp.attach('#characters');
+
+        var vaultBtns = document.querySelectorAll('.js-vault');
+        var sidebar = document.querySelector('.sidebar');
+
+        [].forEach.call(vaultBtns, function(btn) {
+          btn.addEventListener('click', function() {
+            var hidden = getComputedStyle(sidebar).display === 'none';
+
+            sidebar.style.display = hidden ? 'block' : 'none';
+          });
+        });
       }
     });
   }).catch(function(err) {

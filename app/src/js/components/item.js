@@ -131,15 +131,19 @@ define([
       return m('div.item' + (dimmed ? '.dimmed' : ''), {
         config : function(el, redraw, ctx) {
           if(! redraw) {
-            ctx.tooltip = new Tooltip(el, el.querySelector('.itemTooltip'), 100);
+            ctx.tooltip = new Tooltip(
+              el,
+              el.querySelector('.itemTooltip'),
+              100
+            );
           }
         }
       }, [
         m('div.iconWrapper' + (complete ? '.complete' : ''), [
           m('img.icon', {
             src : this.get('icon'),
-            width : 44,
-            height : 44
+            width : 46,
+            height : 46
           }),
         ]),
         stackable ?

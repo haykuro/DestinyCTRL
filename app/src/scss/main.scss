@@ -12,7 +12,9 @@ section {
 @import "components/navbar";
 @import "components/sidebar";
 @import "components/content";
+@import "components/sidebar";
 
 @import "views/tooltip";
 @import "views/item";
+@import "views/vault";
 @import "views/character";
