@@ -49,7 +49,7 @@ define([
       };
 
       xhr.onerror = function() {
-        var raw = this.response
+        var raw = this.response;
         var resp = JSON.parse(raw);
 
         reject(resp);

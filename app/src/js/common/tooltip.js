@@ -143,7 +143,7 @@ define(function() {
       }
 
       return this.cachedTooltip;
-    }
+    };
 
     return Tooltip;
   }());

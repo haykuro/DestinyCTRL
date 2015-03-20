@@ -10,11 +10,11 @@ define([
   }
 
   Vault.prototype._getBucketByType = function(type) {
-    var _bucket = null;
+    var bucket = null;
 
-    this.buckets.some(function(bucket) {
-      if(bucket.type === type) {
-        _bucket = bucket;
+    this.buckets.some(function(_bucket) {
+      if(_bucket.type === type) {
+        bucket = _bucket;
 
         return true;
       }
@@ -22,7 +22,7 @@ define([
       return false;
     });
 
-    return _bucket;
+    return bucket;
   };
 
   Vault.prototype.getAll = function() {
