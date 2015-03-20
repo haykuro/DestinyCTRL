@@ -1,6 +1,11 @@
 .item {
   display: inline-block;
   position: relative;
+  transition: opacity .1s ease-in;
+
+  &.dimmed {
+    opacity: 0.35;
+  }
 
   .iconWrapper {
     border: 2px solid #ccc;
@@ -13,12 +18,6 @@
     &.complete {
       border-color: #EFDD56;
     }
-  }
-
-  transition: opacity .1s ease-in;
-
-  &.dimmed {
-    opacity: 0.35;
   }
 
   .stack {
