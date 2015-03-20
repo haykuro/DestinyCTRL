@@ -26,15 +26,16 @@
   @include flex-grow(1);
   @include transition (all 0.2s ease-in-out);
 
-  background-color: $character-background;
-  border-radius: $base-border-radius;
-  border: $character-border;
-  box-shadow: 0 2px 4px darken($base-background-color, 10%);
-  cursor: pointer;
-  margin: 0 $character-margin $base-spacing $character-margin;
-  position: relative;
   position: relative;
 
+  .character-details{
+    background-color: $character-background;
+    border-radius: $base-border-radius;
+    border: $character-border;
+    box-shadow: 0 2px 4px darken($base-background-color, 10%);
+    margin: 0 $character-margin $base-spacing $character-margin;
+    position: relative;
+  }
   .character-header {
     @include transition (all 0.2s ease-in-out);
     background-color: $character-header-background;
@@ -47,9 +48,33 @@
     height: 65px;
   }
 
-  .character-details {
+  .character-about {
+    color: #fff;
+    .class {
+      position: absolute;
+      top: 12px;
+      left: 65px;
+      font-size: 24px;
+    }
+    .race {
+      position: absolute;
+      top: 35px;
+      left: 65px;
+      font-size: 16px;
+    }
+    .level {
+      position: absolute;
+      top: 20px;
+      right: 10px;
+      font-size: 28px;
+    }
+    .light { color: #EFDD56; }
+  }
+
+  .character-equipment {
     font-size: 0.9em;
     line-height: 1.5em;
+    text-align: center;
     padding: ($base-spacing / 2) ($base-spacing / 2);
 
     p {

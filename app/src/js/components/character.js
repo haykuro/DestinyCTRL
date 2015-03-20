@@ -21,6 +21,7 @@ define([
           self.set({
             initialized : true,
             level : character.level,
+            light : character.isPrestige,
             banner : character.background,
             emblem : character.emblem,
             class : character.characterClass.name,
@@ -50,30 +51,35 @@ define([
           return void 0;
         }
 
-        return m('div.character', [
-          m('div.character-header', {
-            style : {
-              backgroundImage : 'url(' + this.get('banner') + ')'
-            }
-          }, [
-            m('img.character-emblem', {
-              src : this.get('emblem'),
-              width : 50,
-              height : 50
-            }),
-            m('div', [
-              m('div.class', this.get('class')),
-              m('div.race', this.get('race') + ' ' + this.get('gender')),
-              m('div.level', this.get('level')),
+        var light = (this.get('light') ? 'light' : '');
+
+        return m('div.character.twelve', [
+          m('div.character-details.four', [
+            m('div.character-header', {
+              style : {
+                backgroundImage : 'url(' + this.get('banner') + ')'
+              }
+            }, [
+              m('img.character-emblem', {
+                src : this.get('emblem'),
+                width : 50,
+                height : 50
+              }),
+              m('div.character-about', [
+                m('div.class', this.get('class')),
+                m('div.race', this.get('race') + ' ' + this.get('gender')),
+                m('div.level.'+light, this.get('level')),
+              ])
+            ]),
+            m('div.character-equipment', [
+              m('ul.items',
+                this.get('equipment').map(function(item) {
+                  return item.view();
+                })
+              )
             ])
           ]),
-          m('div.character-details', [
-            m('ul.items',
-              this.get('equipment').map(function(item) {
-                return item.view();
-              })
-            )
-          ])
+
         ]);
       }
     });

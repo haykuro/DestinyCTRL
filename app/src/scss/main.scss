@@ -8,6 +8,11 @@ section {
   @include outer-container;
 }
 
+@import "components/grid";
+@import "components/navbar";
+@import "components/sidebar";
+@import "components/content";
+
 @import "views/tooltip";
 @import "views/item";
 @import "views/character";
