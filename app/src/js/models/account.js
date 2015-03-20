@@ -4,7 +4,7 @@ define([
   'models/vault'
 ], function(API, Character, Vault) {
   function Account(data) {
-    var _self = this;
+    var self = this;
 
     this.id = data.userInfo.membershipId;
     this.type = data.userInfo.membershipType;
@@ -13,7 +13,7 @@ define([
     this.avatar = 'https://www.bungie.net/' +
       data.userInfo.iconPath.replace(/^\//, '');
     this.characters = data.characters.map(function(char) {
-      return new Character(_self, char);
+      return new Character(self, char);
     });
   }
 
@@ -30,12 +30,12 @@ define([
   };
 
   Account.prototype.getVault = function() {
-    var _self = this;
+    var self = this;
 
     return new Promise(function(resolve, reject) {
       API.requestWithToken(
         'GET',
-        '/Destiny/' + _self.type +
+        '/Destiny/' + self.type +
         '/MyAccount/Vault',
         { definitions : true }
       ).then(function(resp) {
